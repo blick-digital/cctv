@@ -82,7 +82,7 @@ svg { display: block; }
 .sec { position: relative; padding: calc(180 * var(--u)) 0; }
 
 /* слова для анимации заголовков */
-.w { display: inline-block; overflow: hidden; vertical-align: top; padding: .16em 0 .1em; margin: -.16em 0 -.1em; }
+.w { display: inline-block; overflow: visible; clip-path: inset(-.35em -.02em -.12em); vertical-align: top; padding: .24em 0 .1em; margin: -.24em 0 -.1em; }
 .w > span { display: inline-block; will-change: transform; }
 
 /* ---------- Кнопки ---------- */
