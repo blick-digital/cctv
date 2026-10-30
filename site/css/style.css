@@ -175,6 +175,10 @@ body.menu-open .hdr .logo-svg path[fill="#0E37A5"] { fill: #fff; }
 .hero { position: relative; height: 100svh; min-height: 620px; overflow: hidden; color: #fff; background: #000; }
 .hero-bg { position: absolute; inset: 0; overflow: hidden; }
 .hero-bg img { width: 100%; height: 100%; object-fit: cover; object-position: 0% 52%; transform: scale(1.06); transform-origin: 0% 50%; }
+.hero-bg video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 0% 52%; transform: scale(1.06); transform-origin: 0% 50%; }
+.hero-video { pointer-events: none; }
+.hero-video:not([data-ready]) { opacity: 0; }
+.hero-video[data-ready] { opacity: 1; transition: opacity .7s ease; }
 .hero-shade { position: absolute; inset: 0; background: linear-gradient(180deg, #000 0%, rgba(0, 0, 0, .55) 45%, rgba(0, 0, 0, .3) 100%); }
 
 .hero-brand { position: absolute; left: calc(580 * var(--u)); top: 41.6%; }
@@ -678,6 +682,7 @@ html.anim [data-reveal].is-in { opacity: 1; transform: none; transition: opacity
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { transition-duration: .01ms !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; }
   html.anim [data-reveal] { opacity: 1; transform: none; }
+  .hero-video { display: none; }
 }
 
 /* ---------- Правки 28.10 ---------- */

@@ -10,6 +10,10 @@
 
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const hasGsap = !!(window.gsap && window.ScrollTrigger);
+  const heroVideo = $('.hero-video');
+  if (heroVideo && !reduce) {
+    heroVideo.addEventListener('playing', () => heroVideo.setAttribute('data-ready', ''), { once: true });
+  }
   if (!reduce && hasGsap) document.documentElement.classList.add('anim');
 
   /* ================= Отрисовка из данных ================= */
@@ -153,7 +157,7 @@
     /* ---- вступление первого экрана ---- */
     if (!reduce) {
       const intro = gsap.timeline({ defaults: { ease: 'expo.out' }, delay: 0.1 });
-      intro.from('.hero-bg img', { scale: 1.22, duration: 2.4, ease: 'power3.out' }, 0)
+      intro.from('.hero-bg img, .hero-bg video', { scale: 1.22, duration: 2.4, ease: 'power3.out' }, 0)
         .from('.hero-title .line-mask > span', { yPercent: 105, duration: 1.4 }, 0.25)
         .from('.hero-sub span', { yPercent: 60, opacity: 0, duration: 1.1, stagger: 0.08 }, 0.55)
         .from('.hero-row .pill', { opacity: 0, duration: 1.1, clearProps: 'opacity' }, 0.6)
@@ -206,7 +210,7 @@
 
       // 3. фото первого экрана стирается вверх, открывая белый экран
       tl.fromTo('.hero-bg', { clipPath: 'inset(0% 0% 0% 0%)' }, { clipPath: 'inset(0% 0% 100% 0%)', duration: 0.55, ease: 'power3.inOut' }, 0.22)
-        .fromTo('.hero-bg img', { yPercent: 0 }, { yPercent: -12, duration: 0.55 }, 0.22);
+        .fromTo('.hero-bg img, .hero-bg video', { yPercent: 0 }, { yPercent: -12, duration: 0.55 }, 0.22);
 
       // 4. левая колонка «Направления»
       tl.fromTo($$('.dirs-head > *'), { opacity: 0, y: () => 40 * U() }, { opacity: 1, y: 0, duration: 0.25, stagger: 0.04, ease: 'power2.out' }, 0.68)
@@ -247,7 +251,7 @@
         track.style.height = ''; ScrollTrigger.removeEventListener('refreshInit', fixTrackH);
         stageST = null; svcST = null;
         gsap.set(cards, { clearProps: 'all' });
-        gsap.set([...$$('.dcard-bg, .dcard-frame, .dcard-num, .dcard-body > *, .dirs-head > *'), '.hero-bg', '.hero-bg img', '.hero-brand', '.hero-hint', '.hero-lead', '.hero-line'], { clearProps: 'all' });
+        gsap.set([...$$('.dcard-bg, .dcard-frame, .dcard-num, .dcard-body > *, .dirs-head > *'), '.hero-bg', '.hero-bg img, .hero-bg video', '.hero-brand', '.hero-hint', '.hero-lead', '.hero-line'], { clearProps: 'all' });
       };
     });
 

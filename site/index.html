@@ -8,7 +8,7 @@
 <meta name="theme-color" content="#0E37A5">
 <link rel="preload" href="assets/img/hero.jpg" as="image">
 <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
-<link rel="stylesheet" href="css/style.css?v=41">
+<link rel="stylesheet" href="css/style.css?v=42">
 </head>
 <body>
 
@@ -55,6 +55,9 @@
     <div class="hero" id="hero">
       <div class="hero-bg" aria-hidden="true">
         <img src="assets/img/hero.jpg" alt="" fetchpriority="high">
+        <video class="hero-video" autoplay muted loop playsinline preload="metadata" poster="assets/img/hero.jpg">
+          <source src="assets/video/hero.mp4?v=2" type="video/mp4">
+        </video>
         <i class="hero-shade"></i>
       </div>
 
@@ -253,6 +256,6 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
 <script src="js/data.js?v=39"></script>
-<script src="js/main.js?v=39"></script>
+<script src="js/main.js?v=41"></script>
 </body>
 </html>
