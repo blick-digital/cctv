@@ -1,0 +1,741 @@
+<title>Прототип сайта CCTV</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: серый вайрфрейм. Полосы-секции на всю ширину, внутри контейнер .ct. Цвет есть только у меток направлений */
+:root{
+  --bg:#f4f5f7; --paper:#ffffff; --fg:#1d2024; --muted:#646a72; --line:#d6dae0; --soft:#eceef2;
+  --ph1:#e6e9ed; --ph2:#dde1e6; --ink:#1f2328; --ink-fg:#ffffff; --proto:#c2410c; --proto-bg:#fff1e8;
+  --ok:#2e6b3d; --ok-bg:#e3f1e6; --tbd:#8a5a00;
+  --c-contract:#2f63a3; --c-business:#a8721a; --c-home:#3f7f50; --c-telecom:#6a4fb3;
+  --f-sans:"IBM Plex Sans",-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#16181b; --paper:#1f2226; --fg:#e8eaed; --muted:#9aa1a9; --line:#363b41; --soft:#272b30;
+  --ph1:#2a2e33; --ph2:#30353b; --ink:#e8eaed; --ink-fg:#16181b; --proto:#fb923c; --proto-bg:#3a2514;
+  --ok:#86c495; --ok-bg:#1f3325; --tbd:#e7b25a;
+  --c-contract:#6d9ee0; --c-business:#e0aa4f; --c-home:#72b583; --c-telecom:#a48ae6; color-scheme:dark }}
+:root[data-theme="dark"]{
+  --bg:#16181b; --paper:#1f2226; --fg:#e8eaed; --muted:#9aa1a9; --line:#363b41; --soft:#272b30;
+  --ph1:#2a2e33; --ph2:#30353b; --ink:#e8eaed; --ink-fg:#16181b; --proto:#fb923c; --proto-bg:#3a2514;
+  --ok:#86c495; --ok-bg:#1f3325; --tbd:#e7b25a;
+  --c-contract:#6d9ee0; --c-business:#e0aa4f; --c-home:#72b583; --c-telecom:#a48ae6; color-scheme:dark }
+
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--f-sans);font-size:15px;line-height:1.55}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:60;background:var(--paper)}
+a{color:inherit}
+h1,h2,h3{margin:0;line-height:1.2;text-wrap:balance}
+h1{font-size:clamp(28px,4.6vw,46px);font-weight:700;letter-spacing:-.01em}
+h2{font-size:clamp(22px,2.8vw,28px);font-weight:600}
+h3{font-size:16px;font-weight:600}
+p{margin:0}
+.ct{max-width:1160px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.mut{color:var(--muted)} .sm{font-size:13px}
+.lbl{font-family:var(--f-mono);font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.tbd{font-style:italic;color:var(--tbd);font-size:13px}
+.stack{display:flex;flex-direction:column;gap:12px}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+:focus-visible{outline:2px solid var(--proto);outline-offset:2px}
+
+/* полоса прототипа */
+.proto{background:var(--proto-bg);color:var(--proto);font-size:13px;border-bottom:1px solid var(--line)}
+.proto .ct{display:flex;flex-wrap:wrap;gap:6px 16px;align-items:center;padding-block:7px}
+.proto b{font-family:var(--f-mono);letter-spacing:.08em}
+.proto a,.proto button{color:var(--proto);font:inherit;font-weight:500;background:none;border:0;padding:0;cursor:pointer;text-decoration:underline;text-underline-offset:3px}
+.proto .sp{flex:1}
+
+/* шапка */
+.hdr{position:sticky;top:env(safe-area-inset-top,0px);z-index:50;background:var(--paper);border-bottom:1px solid var(--line)}
+.hdr .ct{display:flex;align-items:center;gap:20px;min-height:64px}
+.logo{display:flex;align-items:center;gap:10px;text-decoration:none;font-weight:700;letter-spacing:.04em;white-space:nowrap}
+.logo-mark{width:30px;height:30px;border:2px dashed var(--muted);border-radius:6px;display:grid;place-items:center;font-size:9px;font-family:var(--f-mono);color:var(--muted);font-weight:500;letter-spacing:0}
+.badge{font-family:var(--f-mono);font-size:11px;letter-spacing:.06em;border:1.5px solid var(--c);color:var(--c);border-radius:4px;padding:2px 7px;white-space:nowrap;font-weight:500}
+.nav{display:flex;align-items:center;gap:18px;font-size:14px}
+.nav>a{text-decoration:none}
+.nav>a:hover,.dd summary:hover{color:var(--muted)}
+.dd{position:relative}
+.dd summary{list-style:none;cursor:pointer}
+.dd summary::-webkit-details-marker{display:none}
+.dd summary::after{content:" ▾";font-size:11px}
+.dd-panel{position:absolute;top:calc(100% + 18px);left:-16px;background:var(--paper);border:1px solid var(--line);border-radius:10px;box-shadow:0 12px 30px rgba(0,0,0,.12);padding:12px;z-index:55}
+.dd-dirs{display:grid;grid-template-columns:repeat(2,240px);gap:8px}
+.dd-dir{display:flex;flex-direction:column;gap:2px;padding:10px 12px;border-radius:8px;border-left:4px solid var(--c);text-decoration:none;background:var(--soft)}
+.dd-dir span{font-size:13px;color:var(--muted)}
+.dd-svc{display:grid;grid-template-columns:repeat(3,210px);gap:18px 20px}
+.dd-svc>div{display:flex;flex-direction:column;gap:2px}
+.dd-svc .gh{font-weight:600;font-size:14px;text-decoration:none;margin-bottom:2px}
+.dd-svc ul{list-style:none;margin:0;padding:0}
+.dd-svc li a{display:block;padding:3px 0;text-decoration:none;font-size:13.5px;color:var(--muted)}
+.dd-svc li a:hover,.dd-svc .gh:hover{color:var(--fg)}
+.hdr .sp{flex:1}
+.phone{font-family:var(--f-mono);font-size:13px;white-space:nowrap}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;background:var(--ink);color:var(--ink-fg);border:1.5px solid var(--ink);border-radius:8px;padding:10px 18px;font:inherit;font-weight:500;font-size:14px;text-decoration:none;cursor:pointer;white-space:nowrap}
+.btn.ghost{background:transparent;color:var(--fg);border-color:var(--line)}
+.btn.sm{padding:7px 12px;font-size:13px}
+.btn:hover{opacity:.88}
+.burger{display:none}
+.burger summary{list-style:none;cursor:pointer;border:1px solid var(--line);border-radius:8px;padding:6px 12px;font-size:14px}
+.burger summary::-webkit-details-marker{display:none}
+.burger-panel{position:absolute;left:0;right:0;top:100%;background:var(--paper);border-bottom:1px solid var(--line);box-shadow:0 12px 30px rgba(0,0,0,.12);max-height:75vh;overflow:auto}
+.burger-panel .ct{display:flex;flex-direction:column;gap:4px;padding-block:12px 18px}
+.burger-panel a{text-decoration:none;padding:8px 0;border-bottom:1px solid var(--soft)}
+.burger-panel .lbl{margin-top:10px}
+/* иконки шапки, выпадающий телефон, полноэкранное меню */
+.hicon{width:42px;height:42px;display:grid;place-items:center;border:1px solid var(--line);border-radius:50%;background:var(--paper);color:var(--fg);cursor:pointer;list-style:none;padding:0}
+.hicon::-webkit-details-marker{display:none}
+.hicon:hover{border-color:var(--muted)}
+.hicon svg{width:20px;height:20px}
+.hacts{display:flex;gap:10px;align-items:center}
+@media (max-width:1040px){.nav{display:none}}
+details.phone-dd{position:relative}
+details.phone-dd>summary{list-style:none}
+details.phone-dd>summary::-webkit-details-marker{display:none}
+.phone-panel{position:absolute;right:0;top:calc(100% + 10px);width:270px;background:var(--paper);border:1px solid var(--line);border-radius:12px;box-shadow:0 12px 30px rgba(0,0,0,.14);padding:16px;display:flex;flex-direction:column;gap:8px;z-index:55}
+.phone-panel .phone{font-size:17px;font-weight:600;user-select:all}
+.mega{position:fixed;inset:0;z-index:70;background:var(--paper);overflow:auto;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+.mega-top{display:flex;align-items:center;gap:16px;min-height:64px;border-bottom:1px solid var(--line)}
+.mega-top .sp{flex:1}
+.mega-grid{display:grid;grid-template-columns:1.7fr 1fr 1fr;gap:36px;padding-block:32px 48px}
+.mdirs{display:grid;grid-template-columns:1fr 1fr;gap:16px 24px}
+.mdir{display:flex;flex-direction:column;gap:3px;border-left:4px solid var(--c);padding-left:14px}
+.mdir .mh{font-weight:700;letter-spacing:.03em;font-size:15px;margin-bottom:4px}
+.mega a{text-decoration:none}
+.mdir a:not(.mh),.mcol a{color:var(--muted);font-size:14.5px;padding:2px 0}
+.mega a:hover{color:var(--fg)}
+.mcol{display:flex;flex-direction:column;gap:3px;min-width:0}
+.mcol .lbl{margin-bottom:6px}
+.mcol+.mcol{margin-top:22px}
+.mcol .btn{align-self:flex-start;margin-top:10px}
+@media (max-width:900px){.mega-grid{grid-template-columns:1fr 1fr}.mdirs{grid-column:1/-1}}
+@media (max-width:560px){.mega-grid,.mdirs{grid-template-columns:1fr}}
+
+/* секции-блоки */
+.blk{position:relative;padding-block:44px;border-bottom:1px solid var(--line)}
+.blk.alt{background:var(--paper)}
+.blk>.ct{display:flex;flex-direction:column;gap:22px}
+.labels .blk::before{content:attr(data-label);position:absolute;top:8px;left:max(16px,env(safe-area-inset-left,0px));font-family:var(--f-mono);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--proto);background:var(--proto-bg);padding:1px 7px;border-radius:3px;z-index:2}
+.sec-h{display:flex;flex-wrap:wrap;align-items:end;justify-content:space-between;gap:12px}
+.sec-h>div{display:flex;flex-direction:column;gap:6px;max-width:70ch}
+.lead{color:var(--muted);max-width:66ch;font-size:16px}
+
+/* заглушка картинки */
+.ph{background:repeating-linear-gradient(135deg,var(--ph1) 0 12px,var(--ph2) 12px 24px);border-radius:8px;display:grid;place-items:center;max-width:100%;width:100%;color:var(--muted);font-family:var(--f-mono);font-size:12px;text-align:center;padding:8px}
+
+/* герой */
+.hero{display:grid;grid-template-columns:1.1fr 1fr;gap:32px;align-items:center}
+.hero .stack{gap:16px}
+.hero.dir-hero{border-left:6px solid var(--c);padding-left:24px}
+@media (max-width:820px){.hero{grid-template-columns:1fr}}
+
+.crumbs{font-size:13px;color:var(--muted);display:flex;flex-wrap:wrap;gap:6px}
+.crumbs a{text-decoration:none}.crumbs a:hover{text-decoration:underline}
+
+/* сетки */
+.g2{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+@media (max-width:960px){.g4{grid-template-columns:repeat(2,1fr)}.g3{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:600px){.g4,.g3,.g2{grid-template-columns:1fr}}
+.g2>*,.g3>*,.g4>*{min-width:0}
+
+.card{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:18px;display:flex;flex-direction:column;gap:8px;text-decoration:none}
+a.card:hover{border-color:var(--muted)}
+.dcard{border-top:5px solid var(--c);min-height:190px}
+.dcard .badge{align-self:flex-start}
+.dcard .go{margin-top:auto;font-size:14px;font-weight:500}
+.contract{--c:var(--c-contract)} .business{--c:var(--c-business)} .home{--c:var(--c-home)} .telecom{--c:var(--c-telecom)}
+
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{border:1px solid var(--line);border-radius:6px;padding:5px 10px;font-size:13.5px;background:var(--paper);text-decoration:none}
+a.chip:hover{border-color:var(--muted)}
+.chip.key{border-color:var(--fg);font-weight:600}
+.chip.sm{font-size:12px;padding:2px 8px}
+
+/* услуги: вкладки групп + раскрывающийся список */
+.svc-tabs{display:flex;flex-wrap:wrap;gap:12px 28px;padding-bottom:22px;border-bottom:1px solid var(--line)}
+.svc-tab{font:inherit;font-size:17px;background:none;border:0;padding:0 0 3px;color:var(--muted);cursor:pointer;border-bottom:1.5px solid var(--line);text-align:left}
+.svc-tab:hover{color:var(--fg)}
+.svc-tab[aria-selected="true"]{color:var(--fg);font-weight:600;border-bottom:2px solid var(--fg)}
+.svc-panel{display:grid;grid-template-columns:1fr 1fr;gap:32px;align-items:stretch}
+.svc-left{gap:12px}
+.svc-left .btn{align-self:flex-start;margin-top:auto}
+.svc-list{display:flex;flex-direction:column;min-width:0}
+.svc-item{border-bottom:1px solid var(--line)}
+.svc-item summary{list-style:none;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:16px;padding:13px 0;font-size:16px}
+.svc-item summary::-webkit-details-marker{display:none}
+.svc-item summary i{font-style:normal;width:26px;height:26px;flex:none;border:1px solid var(--line);border-radius:50%;display:grid;place-items:center;color:var(--muted);transition:transform .2s}
+.svc-item[open] summary i{transform:rotate(45deg)}
+.svc-item summary:hover{color:var(--muted)}
+.svc-body{padding:0 0 16px;display:flex;flex-direction:column;gap:10px;font-size:14px}
+.svc-body a{font-size:13.5px}
+@media (max-width:820px){.svc-panel{grid-template-columns:1fr}.svc-left .btn{margin-top:4px}}
+
+.pcard{background:var(--paper);border:1px solid var(--line);border-radius:10px;overflow:hidden;display:flex;flex-direction:column;text-decoration:none}
+.pcard .ph{border-radius:0}
+.pc-b{padding:14px 16px;display:flex;flex-direction:column;gap:6px}
+a.pcard:hover{border-color:var(--muted)}
+.pcard.empty{border-style:dashed;background:transparent}
+
+.logos{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.logo-ph{border:1px dashed var(--line);border-radius:8px;min-height:72px;display:grid;place-items:center;font-weight:600;color:var(--muted);text-align:center;padding:8px}
+@media (max-width:600px){.logos{grid-template-columns:repeat(2,1fr)}}
+
+.nums{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.num{background:var(--paper);padding:18px;display:flex;flex-direction:column;gap:4px}
+.num b{font-size:28px;font-weight:600;line-height:1.1}
+.about{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center}
+.about>*{min-width:0}
+.nums.n2{grid-template-columns:1fr 1fr}
+.nums.n2 .num{padding:24px}
+@media (max-width:820px){.about{grid-template-columns:1fr}}
+@media (max-width:760px){.nums{grid-template-columns:repeat(2,1fr)}}
+
+.steps{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(5,1fr);gap:12px;counter-reset:s}
+.steps li{counter-increment:s;background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:16px;display:flex;flex-direction:column;gap:6px}
+.steps li::before{content:counter(s);font-family:var(--f-mono);font-size:12px;width:26px;height:26px;border:1px solid var(--line);border-radius:50%;display:grid;place-items:center}
+.steps li span{font-size:13px;color:var(--muted)}
+@media (max-width:960px){.steps{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:520px){.steps{grid-template-columns:1fr}}
+
+details.faq{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:14px 18px}
+details.faq summary{cursor:pointer;font-weight:600}
+details.faq p{margin-top:8px}
+
+.cta-band{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:24px;display:grid;grid-template-columns:1fr 1.1fr;gap:28px;align-items:start}
+@media (max-width:820px){.cta-band{grid-template-columns:1fr}}
+
+/* формы */
+form.f{display:flex;flex-direction:column;gap:12px}
+.fr{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media (max-width:520px){.fr{grid-template-columns:1fr}}
+.fl{display:flex;flex-direction:column;gap:5px;font-size:13px;color:var(--muted);min-width:0}
+.fl input,.fl select,.fl textarea{font:inherit;font-size:15px;color:var(--fg);background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:10px 12px;width:100%}
+.fl textarea{min-height:80px;resize:vertical}
+.chk{display:flex;gap:8px;align-items:flex-start;font-size:13px;color:var(--muted)}
+.chk input{margin-top:3px}
+.done{background:var(--ok-bg);color:var(--ok);border-radius:10px;padding:18px;display:flex;flex-direction:column;gap:6px}
+.done b{font-size:16px}
+
+/* фильтры */
+.filters{display:grid;grid-template-columns:repeat(3,1fr) auto;gap:12px;align-items:end}
+@media (max-width:860px){.filters{grid-template-columns:repeat(2,1fr)}}
+.facts{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.facts div{background:var(--paper);padding:14px 16px;display:flex;flex-direction:column;gap:3px}
+@media (max-width:600px){.facts{grid-template-columns:1fr 1fr}}
+
+/* модальное окно, квиз, запись */
+.modal{position:fixed;inset:0;z-index:80;background:rgba(10,12,14,.55);display:grid;place-items:center;padding:max(16px,env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px)) max(16px,env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px))}
+.m-box{background:var(--paper);border-radius:14px;width:min(560px,100%);max-height:100%;overflow:auto;padding:24px;position:relative;display:flex;flex-direction:column;gap:16px}
+.m-x{position:absolute;top:10px;right:12px;background:none;border:0;font-size:26px;line-height:1;cursor:pointer;color:var(--muted)}
+.qopts{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+@media (max-width:520px){.qopts{grid-template-columns:1fr}}
+.qopt{font:inherit;text-align:left;background:var(--bg);border:1.5px solid var(--line);border-radius:8px;padding:12px 14px;cursor:pointer;color:var(--fg)}
+.qopt.diropt{border-left:5px solid var(--c)}
+.qopt[aria-pressed="true"]{border-color:var(--ink);background:var(--soft);font-weight:600}
+.qbar{height:4px;background:var(--soft);border-radius:4px;overflow:hidden}
+.qbar i{display:block;height:100%;background:var(--ink)}
+.slots{display:flex;flex-wrap:wrap;gap:8px}
+.slot{font:inherit;font-size:14px;background:var(--bg);border:1.5px solid var(--line);border-radius:8px;padding:8px 12px;cursor:pointer;color:var(--fg);min-width:64px}
+.slot[aria-pressed="true"]{border-color:var(--ink);background:var(--soft);font-weight:600}
+.slot:disabled{opacity:.4;cursor:not-allowed;text-decoration:line-through}
+.slot small{display:block;font-size:11px;color:var(--muted)}
+
+.pages-list{columns:3;column-gap:24px}
+.pages-list section{break-inside:avoid;margin-bottom:18px;display:flex;flex-direction:column;gap:4px}
+.pages-list a{font-size:14px}
+.pages-list code{font-family:var(--f-mono);font-size:11.5px;color:var(--muted)}
+@media (max-width:860px){.pages-list{columns:2}}
+@media (max-width:520px){.pages-list{columns:1}}
+
+/* подвал */
+.ftr{background:var(--paper);padding-block:40px 28px}
+.ftr .ct{display:flex;flex-direction:column;gap:28px}
+.fcols{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
+.fcols div{display:flex;flex-direction:column;gap:6px;font-size:14px;min-width:0}
+.fcols a{text-decoration:none;color:var(--muted)}
+.fcols a:hover{color:var(--fg)}
+.fbot{border-top:1px solid var(--line);padding-top:16px;font-size:12.5px;color:var(--muted);display:flex;flex-wrap:wrap;gap:8px 20px}
+@media (max-width:760px){.fcols{grid-template-columns:1fr 1fr}}
+@media (prefers-reduced-motion:no-preference){html{scroll-behavior:smooth}}
+</style>
+
+<div class="proto"><div class="ct">
+  <b>ПРОТОТИП</b><span>cctv.plus · кликабельная схема без дизайна</span><span class="sp"></span>
+  <a href="#pages">Все страницы</a>
+  <button type="button" id="lbl-toggle">Скрыть подписи блоков</button>
+</div></div>
+<header class="hdr" id="hdr"></header>
+<main id="app"></main>
+<footer class="ftr" id="ftr"></footer>
+<nav class="mega" id="mega" aria-label="Карта сайта" hidden></nav>
+<div class="modal" id="modal" hidden><div class="m-box" role="dialog" aria-modal="true" aria-labelledby="m-title"><button type="button" class="m-x" id="m-x" aria-label="Закрыть">×</button><div id="m-body" class="stack"></div></div></div>
+
+<script>
+/* ---------- Данные ---------- */
+const PHONE = '8 (812) 925-44-40', EMAIL = 'info@cctv.plus';
+const ADDRESS = 'Санкт-Петербург, наб. Обводного канала, 134–136–138, лит. ВМ, офис 3';
+
+const DIRS = {
+  contract:{brand:'CCTV CONTRACT', title:'Крупные объекты под ключ', card:'Девелоперам, социальным и промышленным объектам',
+    lead:'Фасады, отделка и инженерные системы на жилых комплексах, школах, поликлиниках и заводах. Работаем по тендерам и прямым договорам.',
+    subs:[['developers','Девелоперам','Жилые комплексы и многоквартирные дома'],['social','Социальные объекты','Школы, поликлиники, больницы'],['industrial','Промышленные объекты','Заводы и производства']],
+    cta:'Запросить КП', form:'tender', steps:'b2b',
+    faq:[['Какие объёмы работ вы берёте?',null],['Работаете ли с госзаказом?',null],['Есть ли СРО и страхование ответственности?','Да. ООО «ЦЦТВ Плюс» — член СРО «Союз строителей «Газораспределительная система. Строительство» с 2022 года, ответственность застрахована.'],['В каких регионах работаете?','Петербург, Московская область, Ижевск. Полная география уточняется.']]},
+  business:{brand:'CCTV BUSINESS', title:'Строительство и ремонт коммерческих объектов', card:'Торговым центрам, коммерческим помещениям, складам и АЗС',
+    lead:'Отделка, фасады, кровля и инженерные системы для коммерческой недвижимости. Считаем смету и выезжаем на объект.',
+    subs:[['malls','Торговые центры','Отделка, фасады, инженерия'],['commercial','Коммерческие помещения','Офисы, магазины, кафе'],['warehouses','Склады','Кровля, инженерные системы, отделка'],['gas-stations','АЗС','Строительство и ремонт']],
+    cta:'Рассчитать смету', form:'quiz', steps:'b2b',
+    faq:[['Можно ли работать, не закрывая объект?',null],['Сколько стоит ремонт помещения?',null],['Даёте ли гарантию на работы?',null]]},
+  home:{brand:'CCTV HOME', title:'Ремонт квартир и загородных домов', card:'Частным заказчикам: квартиры и загородные дома',
+    lead:'Подход крупных строек в частном ремонте: проект, смета, контроль каждого этапа и внимание к деталям.',
+    subs:[['apartments','Ремонт квартир','Новостройки и вторичное жильё'],['houses','Загородные дома','Отделка, инженерия, фасады, кровля'],['design','Дизайн-проект','Планировка, визуализация, рабочие чертежи']],
+    cta:'Записаться на замер', form:'booking', steps:'home',
+    faq:[['Сколько стоит ремонт квартиры?',null],['Нужен ли дизайн-проект?',null],['Как вы контролируете качество?',null],['Сколько длится ремонт?',null]]},
+  telecom:{brand:'CCTV TELECOM', title:'Работы для операторов связи', card:'Операторам связи: Ростелеком, МГТС, МТС',
+    lead:'Самостоятельное направление группы. Выполняем работы для операторов связи по их требованиям и регламентам.',
+    subs:[['services','Виды работ','Что делаем для операторов'],['documents','Допуски и регламенты','Документы для работы на сетях']],
+    cta:'Запросить КП', form:'tender', steps:'b2b',
+    faq:[['Какие работы выполняете для операторов?',null],['Есть ли допуски для работы на сетях операторов?',null],['Как пригласить вас в тендер?',null]]},
+};
+const DKEYS = Object.keys(DIRS);
+
+const SERVICES = [
+  {slug:'project-docs',name:'Проектная документация',g:'ПИР',dirs:['contract','business','telecom'],desc:'Разработка проектной и рабочей документации по разделам.'},
+  {slug:'estimates',name:'Сметная документация',g:'ПИР',dirs:['contract','business','home','telecom'],desc:'Сметы, ведомости объёмов работ, расчёт стоимости.'},
+  {slug:'design',name:'Дизайн-проекты',g:'ПИР',dirs:['home','business'],desc:'Планировки, визуализации, рабочие чертежи для ремонта.'},
+  {slug:'site',name:'Устройство стройплощадки',g:'СМР',dirs:['contract','business'],desc:'Подготовка площадки, ограждение, бытовой городок, временные сети.'},
+  {slug:'monolith',name:'Монолитные работы',g:'СМР',dirs:['contract','business'],desc:'Фундаменты, перекрытия, стены из монолитного железобетона.'},
+  {slug:'windows',name:'Окна и витражи',g:'СМР',dirs:['contract','business','home'],desc:'Монтаж окон, витражей и светопрозрачных конструкций.'},
+  {slug:'roofing',name:'Кровельные работы',g:'СМР',dirs:['contract','business','home'],desc:'Устройство и ремонт плоских и скатных кровель, кровель паркингов.'},
+  {slug:'facades',name:'Фасады и НВФ',g:'СМР',key:true,dirs:['contract','business','home'],desc:'Навесные вентилируемые фасады: подсистема, утепление, облицовка.'},
+  {slug:'electric',name:'Электрика',g:'СМР',dirs:['contract','business','home'],desc:'Электромонтаж, щиты, освещение.'},
+  {slug:'water-heating',name:'Отопление, водоснабжение и канализация (ОВ и ВК)',short:'ОВ и ВК',g:'СМР',dirs:['contract','business','home'],desc:'Системы отопления, водоснабжения и канализации.'},
+  {slug:'ventilation',name:'Вентиляция',g:'СМР',dirs:['contract','business','home'],desc:'Монтаж систем вентиляции и кондиционирования.'},
+  {slug:'low-current',name:'Слаботочные сети',g:'СМР',dirs:['contract','business','home','telecom'],desc:'СКС, видеонаблюдение, контроль доступа, связь.'},
+  {slug:'rough-finish',name:'Черновая отделка',g:'СМР',key:true,dirs:['contract','business','home'],desc:'Стяжка, штукатурка, перегородки, подготовка под чистовую отделку.'},
+  {slug:'fine-finish',name:'Чистовая отделка',g:'СМР',key:true,dirs:['contract','business','home'],desc:'Финишные покрытия стен, полов и потолков.'},
+];
+const S = Object.fromEntries(SERVICES.map(s=>[s.slug,s]));
+const sname = s => S[s].short || S[s].name;
+const SGROUPS = [
+  {k:'pir',name:'Проектирование',tag:'ПИР',desc:'Готовим проектную и сметную документацию, делаем дизайн-проекты интерьеров.',items:['project-docs','estimates','design']},
+  {k:'general',name:'Общестроительные работы',tag:'СМР',desc:'Готовим площадку и возводим несущие конструкции.',items:['site','monolith']},
+  {k:'envelope',name:'Фасады, кровля, окна',tag:'СМР',desc:'Закрываем контур здания: навесные фасады, кровля, окна и витражи.',items:['facades','roofing','windows']},
+  {k:'engineering',name:'Инженерные системы',tag:'СМР',desc:'Монтируем внутренние инженерные сети здания.',items:['electric','water-heating','ventilation','low-current']},
+  {k:'finish',name:'Отделка',tag:'СМР',desc:'Черновая и чистовая отделка: от стяжки до финишных покрытий.',items:['rough-finish','fine-finish']},
+];
+const grpOf = s => SGROUPS.find(g=>g.items.includes(s));
+
+const PROJECTS = [
+  {slug:'school-lobnya',name:'Школа на 2200 мест',city:'Лобня',type:'Школа',dir:'contract',sub:'social',works:['facades','rough-finish','fine-finish']},
+  {slug:'zhk-severny-veter',name:'ЖК «Северный ветер»',city:'Санкт-Петербург',type:'Жилой комплекс',dir:'contract',sub:'developers',works:['rough-finish','roofing']},
+  {slug:'polyclinic-balashikha',name:'Поликлиника',city:'Балашиха',type:'Поликлиника',dir:'contract',sub:'social',works:['rough-finish','fine-finish']},
+  {slug:'school-molokovo',name:'Школа',city:'Молоково',type:'Школа',dir:'contract',sub:'social',works:['rough-finish','fine-finish']},
+  {slug:'mkd-izhevsk',name:'Многоквартирный дом, заказчик «Аспек Инжиниринг»',city:'Ижевск',type:'Жилой дом',dir:'contract',sub:'developers',works:['electric','facades']},
+  {slug:'hotel-zoom',name:'Отель Zoom на Чёрной речке',city:'Санкт-Петербург',type:'Отель',dir:'business',sub:'commercial',works:['facades'],note:'Направление уточнить: Business или Contract'},
+];
+const P = Object.fromEntries(PROJECTS.map(p=>[p.slug,p]));
+const CLIENTS = ['Брусника','Глоракс','МСУ-1','Инжиниринг групп'];
+const DOCS = [
+  {name:'Выписка из реестра членов СРО',meta:'Союз строителей «Газораспределительная система. Строительство», рег. № СРО-С-048-12102009. Член с 21.01.2022',ok:true},
+  {name:'Полис страхования гражданской ответственности членов СРО',meta:'ООО «СК «Экспресс-страхование»',ok:true},
+  {name:'Остальные допуски и сертификаты',meta:'Заказчик пришлёт в процессе',ok:false},
+];
+const STEPS = {
+  b2b:[['Запрос или тендер','Получаем ТЗ или приглашение'],['Расчёт','Смета и коммерческое предложение'],['Договор','Фиксируем объём, сроки и цену'],['Работы','Свои инженеры и проверенные подрядчики'],['Сдача','Акты и исполнительная документация']],
+  home:[['Замер','Инженер приезжает на объект'],['Дизайн-проект','Если нужен: планировка и визуализации'],['Смета и договор','Фиксируем стоимость и сроки'],['Ремонт','Контроль этапов и фотоотчёты'],['Сдача','Приёмка и гарантия']],
+};
+
+/* ---------- Помощники ---------- */
+const app = document.getElementById('app');
+const ph = (t,r='16/10') => `<div class="ph" style="aspect-ratio:${r}">${t}</div>`;
+const blk = (label,html,alt) => `<section class="blk${alt?' alt':''}" data-label="${label}"><div class="ct">${html}</div></section>`;
+const tbd = (t='заполним позже') => `<span class="tbd">[${t}]</span>`;
+const badge = d => `<span class="badge ${d}">${DIRS[d].brand}</span>`;
+const crumbs = list => `<nav class="crumbs" aria-label="Навигационная цепочка">${list.map((c,i)=>c[0]?`<a href="${c[0]}">${c[1]}</a>${i<list.length-1?'<span>/</span>':''}`:`<span>${c[1]}</span>`).join('')}</nav>`;
+const secH = (title,sub,right='') => `<div class="sec-h"><div><h2>${title}</h2>${sub?`<p class="mut">${sub}</p>`:''}</div>${right}</div>`;
+const chipsSvc = list => `<div class="chips">${list.map(s=>`<a class="chip${S[s].key?' key':''}" href="#service-${s}">${sname(s)}</a>`).join('')}</div>`;
+function pcard(p){return `<a class="pcard" href="#project-${p.slug}">${ph('Фото объекта','4/3')}<div class="pc-b"><span class="mut sm">${p.city} · ${p.type}</span><h3>${p.name}</h3><div class="chips">${p.works.map(w=>`<span class="chip sm">${sname(w)}</span>`).join('')}</div></div></a>`}
+const pempty = () => `<div class="pcard empty">${ph('Кейс появится позже','4/3')}<div class="pc-b"><span class="mut sm">Город · тип объекта</span><h3>Название объекта</h3>${tbd()}</div></div>`;
+function pgrid(list,min=3){const out=list.map(pcard);while(out.length<min)out.push(pempty());return `<div class="g3">${out.join('')}</div>`}
+const steps = k => `<ol class="steps">${STEPS[k].map(s=>`<li><b>${s[0]}</b><span>${s[1]}</span></li>`).join('')}</ol>`;
+const faq = list => `<div class="stack">${list.map(q=>`<details class="faq"><summary>${q[0]}</summary><p>${q[1]||tbd('ответ подготовим вместе с заказчиком')}</p></details>`).join('')}</div>`;
+const logos = () => `<div class="logos">${CLIENTS.map(c=>`<div class="logo-ph">${c}<br><span class="tbd" style="font-weight:400">логотип</span></div>`).join('')}</div>`;
+const docsList = () => `<div class="g3">${DOCS.map(d=>`<div class="card">${ph(d.ok?'Скан документа':'Документ','3/4')}<h3>${d.name}</h3><p class="sm mut">${d.meta}</p>${d.ok?'':tbd('ждём от заказчика')}</div>`).join('')}</div>`;
+
+let fid = 0;
+function formHTML(type,dir){
+  const id = 'f'+(++fid);
+  const fld = (n,l,t='text',req,extra='') => `<label class="fl" for="${id}-${n}">${l}<input id="${id}-${n}" name="${n}" type="${t}"${req?' required':''}${extra}></label>`;
+  const sel = (n,l,opts) => `<label class="fl" for="${id}-${n}">${l}<select id="${id}-${n}" name="${n}">${opts.map(o=>`<option>${o}</option>`).join('')}</select></label>`;
+  const area = (n,l) => `<label class="fl" for="${id}-${n}">${l}<textarea id="${id}-${n}" name="${n}"></textarea></label>`;
+  const nameph = `<div class="fr">${fld('name','Имя','text',1,' autocomplete="name"')}${fld('phone','Телефон','tel',1,' autocomplete="tel" placeholder="+7"')}</div>`;
+  const consent = `<label class="chk" for="${id}-ok"><input id="${id}-ok" type="checkbox" required> Согласен на обработку персональных данных по <a href="#privacy">политике</a></label>`;
+  const T = {
+    callback:['Обратный звонок','Перезвоним в рабочее время',nameph],
+    general:['Оставить заявку','Заявка попадёт менеджеру нужного направления',nameph+sel('dir','Направление',['Не знаю, подскажите',...DKEYS.map(d=>DIRS[d].brand)])+area('msg','Задача')],
+    tender:['Запрос КП или приглашение в тендер','Приложите ТЗ или проект — рассчитаем стоимость',`<div class="fr">${fld('company','Компания','text',1)}${fld('name','Контактное лицо','text',1)}</div><div class="fr">${fld('phone','Телефон','tel',1)}${fld('email','Почта','email')}</div>${sel('object','Тип объекта',dir&&DIRS[dir]?DIRS[dir].subs.map(s=>s[1]).concat('Другое'):['Жилой комплекс','Социальный объект','Промышленный объект','Коммерческий объект','Другое'])}<label class="fl" for="${id}-file">ТЗ, проект или ведомость объёмов<input id="${id}-file" name="file" type="file" multiple></label>${area('msg','Комментарий')}`],
+    engineer:['Выезд инженера на объект','Инженер осмотрит объект и подготовит смету',nameph+`<div class="fr">${sel('object','Объект',['Торговый центр','Коммерческое помещение','Склад','АЗС','Другое'])}${fld('addr','Адрес объекта')}</div>`+area('msg','Что нужно сделать')],
+    partner:['Анкета подрядчика','Расскажите о компании и видах работ',`<div class="fr">${fld('company','Компания или ИП','text',1)}${fld('name','Контактное лицо','text',1)}</div><div class="fr">${fld('phone','Телефон','tel',1)}${fld('email','Почта','email')}</div>${sel('work','Основной вид работ',SERVICES.filter(s=>s.g==='СМР').map(s=>s.name))}${fld('region','Регион работы')}${area('msg','Опыт и объекты')}`],
+    vacancy:['Отклик на вакансию','Пришлите резюме — свяжемся',nameph+`<label class="fl" for="${id}-cv">Резюме<input id="${id}-cv" name="cv" type="file"></label>`+area('msg','Сопроводительное письмо')],
+  };
+  const t = T[type]||T.callback;
+  return `<form class="f js-form" data-type="${t[0]}"><div class="stack" style="gap:4px"><h3 id="${id}-t">${t[0]}</h3><p class="sm mut">${t[1]}</p></div>${t[2]}${consent}<button class="btn" type="submit">Отправить</button></form>`;
+}
+const doneHTML = (title,extra='') => `<div class="done" role="status"><b>Заявка отправлена</b><span>${title}. В рабочем сайте она уйдёт на ${EMAIL} и в Telegram${extra}.</span><span class="sm">Это прототип: на самом деле ничего не отправлено.</span></div>`;
+
+/* ---------- Шапка и подвал ---------- */
+let ctxDir = null;
+function ctaFor(d){
+  if(!d) return `<button class="btn sm" type="button" data-lead="">Оставить заявку</button>`;
+  if(d==='home') return `<a class="btn sm" href="#home-booking">${DIRS[d].cta}</a>`;
+  if(d==='business') return `<button class="btn sm" type="button" data-quiz="business">${DIRS[d].cta}</button>`;
+  return `<button class="btn sm" type="button" data-form="tender" data-dir="${d}">${DIRS[d].cta}</button>`;
+}
+const ICON_PHONE='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/></svg>', ICON_MENU='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>', ICON_X='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>';
+const logoHTML=()=>`<a class="logo" href="#main"><span class="logo-mark">ЛОГО</span><span>CCTV GROUP</span></a>`;
+function renderHeader(){
+  document.getElementById('hdr').innerHTML = `<div class="ct">
+    ${logoHTML()}
+    ${ctxDir?badge(ctxDir):''}
+    <nav class="nav" aria-label="Главное меню">
+      <details class="dd"><summary>Направления</summary><div class="dd-panel"><div class="dd-dirs">${DKEYS.map(d=>`<a class="dd-dir ${d}" href="#${d}"><b>${DIRS[d].brand}</b><span>${DIRS[d].card}</span></a>`).join('')}</div></div></details>
+      <details class="dd"><summary>Услуги</summary><div class="dd-panel"><div class="dd-svc">${SGROUPS.map(g=>`<div><a class="gh" href="#services-${g.k}">${g.name}</a><ul>${g.items.map(x=>`<li><a href="#service-${x}">${sname(x)}</a></li>`).join('')}</ul></div>`).join('')}</div><div style="margin-top:12px"><a class="sm" href="#services">Все услуги →</a></div></div></details>
+      <a href="#projects">Проекты</a><a href="#clients">Клиенты</a><a href="#about">О группе</a><a href="#contacts">Контакты</a>
+    </nav>
+    <span class="sp"></span>
+    <div class="hacts">
+      <details class="phone-dd"><summary class="hicon" aria-label="Телефон">${ICON_PHONE}</summary><div class="phone-panel"><span class="lbl">Телефон</span><span class="phone">${PHONE}</span><span class="sm mut">${EMAIL}</span><button class="btn sm" type="button" data-form="callback">Заказать звонок</button></div></details>
+      <button class="hicon" type="button" id="menu-btn" aria-label="Открыть меню" aria-expanded="false" aria-controls="mega">${ICON_MENU}</button>
+    </div>
+  </div>`;
+}
+function megaHTML(){
+  const dirs=DKEYS.map(d=>`<div class="mdir ${d}"><a class="mh" href="#${d}">${DIRS[d].brand}</a>${DIRS[d].subs.map(x=>`<a href="#${d}-${x[0]}">${x[1]}</a>`).join('')}<a href="#${d}-projects">Кейсы</a>${d==='home'?'<a href="#home-booking">Онлайн-запись на замер</a>':''}</div>`).join('');
+  const comp=[['main','Главная'],['projects','Проекты'],['about','О группе'],['documents','Документы'],['clients','Клиенты и отзывы'],['partners','Партнёрам'],['careers','Карьера'],['contacts','Контакты'],['privacy','Политика ПДн']];
+  return `<div class="ct mega-top">${logoHTML()}<span class="sp"></span><button class="hicon" type="button" id="mega-x" aria-label="Закрыть меню">${ICON_X}</button></div>
+  <div class="ct mega-grid">
+    <div class="mdirs">${dirs}</div>
+    <div><div class="mcol"><span class="lbl">Услуги</span>${SGROUPS.map(g=>`<a href="#services-${g.k}">${g.name}</a>`).join('')}</div>
+      <div class="mcol"><span class="lbl">Компания</span>${comp.map(c=>`<a href="#${c[0]}">${c[1]}</a>`).join('')}</div></div>
+    <div class="mcol"><span class="lbl">Связаться</span><b class="phone" style="font-size:17px">${PHONE}</b><span>${EMAIL}</span><span class="sm mut">${ADDRESS}</span><button class="btn sm" type="button" data-lead="">Оставить заявку</button></div>
+  </div>`;
+}
+const mega=document.getElementById('mega');
+function openMega(){mega.innerHTML=megaHTML();mega.hidden=false;document.body.style.overflow='hidden';const b=document.getElementById('menu-btn');if(b)b.setAttribute('aria-expanded','true');document.getElementById('mega-x').focus()}
+function closeMega(){if(mega.hidden)return;mega.hidden=true;mega.innerHTML='';document.body.style.overflow='';const b=document.getElementById('menu-btn');if(b){b.setAttribute('aria-expanded','false')}}
+function renderFooter(){
+  document.getElementById('ftr').innerHTML = `<div class="ct">
+    <div class="fcols">
+      <div><span class="lbl">Направления</span>${DKEYS.map(d=>`<a href="#${d}">${DIRS[d].brand}</a>`).join('')}</div>
+      <div><span class="lbl">Услуги</span>${SERVICES.filter(s=>s.key||s.g==='ПИР').map(s=>`<a href="#service-${s.slug}">${sname(s.slug)}</a>`).join('')}<a href="#services">Все услуги</a></div>
+      <div><span class="lbl">Компания</span><a href="#about">О группе</a><a href="#documents">Документы</a><a href="#projects">Проекты</a><a href="#clients">Клиенты и отзывы</a><a href="#partners">Партнёрам</a><a href="#careers">Карьера</a></div>
+      <div><span class="lbl">Контакты</span><span>${PHONE}</span><span>${EMAIL}</span><span class="mut sm">${ADDRESS}</span></div>
+    </div>
+    <div class="fbot"><span>ООО «ЦЦТВ Плюс» · ИНН 7839120090 · член СРО с 2022 года</span><a href="#privacy">Политика обработки персональных данных</a></div>
+  </div>`;
+}
+
+/* ---------- Страницы ---------- */
+function pgMain(open){
+  setSvcScope(null);
+  if(open) svcTab=grpOf(open).k;
+  return blk('Первый экран',`<div class="hero"><div class="stack"><span class="lbl">CCTV Group · Construction &amp; Engineering</span>
+      <h1>Масштаб крупных строек. Внимание к деталям частного ремонта</h1>
+      <p class="lead">Проектирование и строительно-монтажные работы полного цикла: от сметы до чистовой отделки. 10 лет на рынке, член СРО.</p>
+      <div class="row"><button class="btn" type="button" data-lead="">Оставить заявку</button></div></div>
+      ${ph('Фото флагманского объекта','4/3')}</div>`)
+  + `<div id="dirs"></div>` + blk('Выбор направления',secH('Кто вы?','Выберите направление — покажем решения именно для вас')+`<div class="g4">${DKEYS.map(d=>`<a class="card dcard ${d}" href="#${d}">${badge(d)}<h3>${DIRS[d].title}</h3><p class="sm mut">${DIRS[d].card}</p><span class="go">Перейти →</span></a>`).join('')}</div>`,1)
+  + blk('О нас: тезис и цифры',`<div class="about"><div class="stack"><span class="lbl">О нас</span><h2>Строим крупные объекты и делаем частный ремонт с одинаковым вниманием к деталям</h2><p class="mut">CCTV Group 10 лет работает на жилых комплексах, школах, поликлиниках и коммерческих объектах. Ведём полный цикл: проектируем, считаем смету и выполняем работы от фасадов до чистовой отделки.</p><a class="sm" href="#about">Подробнее о группе →</a></div><div class="nums n2"><div class="num"><b>10 лет</b><span class="sm mut">на рынке</span></div><div class="num"><b>100+</b><span class="sm mut">сданных объектов</span></div><div class="num"><b>3+</b><span class="sm mut">региона: СПб, Мособласть, Ижевск</span></div><div class="num"><b>СРО</b><span class="sm mut">член с 2022 года, ответственность застрахована</span></div></div></div>`)
+  + `<div id="svc-sec"></div>` + blk('Услуги: вкладки групп и раскрывающийся список',secH('Услуги','Полный цикл: проектирование и строительно-монтажные работы. Выберите группу и нажмите на услугу.')+`<div id="svc-wrap" class="stack" style="gap:28px">${svcBlock(open)}</div>`,1)
+  + blk('Проекты',secH('Проекты','Школы, жилые комплексы, поликлиники, отели',`<a class="btn ghost sm" href="#projects">Все проекты</a>`)+pgrid(PROJECTS.slice(0,3)))
+  + blk('Как работаем',secH('Как мы работаем','')+steps('b2b'),1)
+  + blk('Нам доверяют',secH('Нам доверяют','')+logos())
+  + blk('Форма заявки',`<div class="cta-band"><div class="stack"><h2>Расскажите о задаче</h2><p class="mut">Укажите направление — заявка сразу попадёт нужному менеджеру.</p><p class="phone">${PHONE}<br>${EMAIL}</p></div>${formHTML('general')}</div>`,1);
+}
+
+function convBlock(d){
+  if(d==='business') return blk('Главная форма направления',`<div class="cta-band"><div class="stack"><h2>Сколько будет стоить?</h2><p class="mut">Ответьте на 4 вопроса — подготовим предварительную смету. Или вызовите инженера на объект.</p><div class="row"><button class="btn" type="button" data-quiz="business">Пройти квиз</button></div></div>${formHTML('engineer',d)}</div>`,1);
+  if(d==='home') return blk('Главная форма направления',`<div class="cta-band"><div class="stack"><h2>Начнём с замера</h2><p class="mut">Запишитесь на удобное время или ответьте на несколько вопросов — посчитаем ремонт.</p><div class="row"><a class="btn" href="#home-booking">Записаться на замер</a><button class="btn ghost" type="button" data-quiz="home">Рассчитать ремонт</button></div></div>${ph('Фото: инженер на замере','4/3')}</div>`,1);
+  return blk('Главная форма направления',`<div class="cta-band"><div class="stack"><h2>${d==='telecom'?'Пригласите нас в тендер':'Пришлите ТЗ — рассчитаем КП'}</h2><p class="mut">Приложите техническое задание, проект или ведомость объёмов работ.</p><p class="phone">${PHONE}<br>${EMAIL}</p></div>${formHTML('tender',d)}</div>`,1);
+}
+
+function pgDir(d){
+  setSvcScope(d);
+  const D = DIRS[d], svc = SERVICES.filter(s=>s.dirs.includes(d)).map(s=>s.slug), pr = PROJECTS.filter(p=>p.dir===d);
+  return blk('Первый экран направления',`${crumbs([['#main','Главная'],[null,D.brand]])}<div class="hero dir-hero ${d}"><div class="stack">${badge(d)}<h1>${D.title}</h1><p class="lead">${D.lead}</p><div class="row">${ctaFor(d).replace('btn sm','btn')}<a class="btn ghost" href="#${d}-projects">Кейсы</a></div></div>${ph('Фото объекта направления','4/3')}</div>`)
+  + blk(d==='telecom'?'Разделы направления':'Типы объектов',secH(d==='telecom'?'Разделы':'С какими объектами работаем','')+`<div class="${D.subs.length>3?'g4':'g3'}">${D.subs.map(s=>`<a class="card ${d}" href="#${d}-${s[0]}">${ph(s[1],'16/10')}<h3>${s[1]}</h3><p class="sm mut">${s[2]}</p></a>`).join('')}</div>`,1)
+  + blk('Услуги направления: вкладки и раскрывающийся список',secH('Что делаем','Выберите группу и нажмите на услугу')+svcWrap())
+  + blk('Кейсы направления',secH('Кейсы',pr.length?'':'Раздел заполним позже',`<a class="btn ghost sm" href="#${d}-projects">Все кейсы ${D.brand}</a>`)+pgrid(pr.slice(0,3)),1)
+  + blk('Как работаем',secH('Как мы работаем','')+steps(D.steps))
+  + convBlock(d)
+  + blk('Документы и отзывы',secH('Документы и отзывы','',`<a class="btn ghost sm" href="#documents">Все документы</a>`)+`<div class="g2"><div class="card"><h3>СРО и страхование</h3><p class="sm mut">${DOCS[0].meta}</p><p class="sm mut">Полис: ${DOCS[1].meta}</p></div><div class="card"><h3>Отзывы клиентов</h3>${tbd('благодарственные письма соберёт заказчик')}</div></div>`)
+  + blk('Вопросы и ответы',secH('Частые вопросы','')+faq(D.faq),1);
+}
+
+function pgSub(d,sub){
+  setSvcScope(d);
+  const D = DIRS[d], s = D.subs.find(x=>x[0]===sub);
+  const pr = PROJECTS.filter(p=>p.dir===d&&p.sub===sub);
+  if(d==='telecom'&&sub==='documents') return blk('Первый экран',`${crumbs([['#main','Главная'],['#telecom',D.brand],[null,s[1]]])}<div class="stack"><h1>${s[1]}</h1><p class="lead">Документы, которые требуют операторы связи для допуска к работам.</p></div>`)+blk('Документы',docsList(),1)+convBlock(d);
+  if(d==='telecom'&&sub==='services') return blk('Первый экран',`${crumbs([['#main','Главная'],['#telecom',D.brand],[null,s[1]]])}<div class="stack">${badge(d)}<h1>Виды работ для операторов связи</h1><p class="lead">Перечень работ уточняется у заказчика.</p></div>`)
+    + blk('Виды работ',`<div class="g2">${['Строительство линий связи','Кабельная канализация','Монтаж оборудования','Слаботочные сети'].map(w=>`<div class="card">${ph(w,'16/9')}<h3>${w}</h3>${tbd('уточнить у заказчика')}</div>`).join('')}</div>`,1)
+    + blk('Заказчики направления',secH('Операторы, с которыми работаем','')+`<div class="logos">${['Ростелеком','МГТС','МТС'].map(c=>`<div class="logo-ph">${c}</div>`).join('')}</div>`)+convBlock(d);
+  const svc = SERVICES.filter(x=>x.dirs.includes(d)).map(x=>x.slug);
+  return blk('Первый экран подраздела',`${crumbs([['#main','Главная'],[`#${d}`,D.brand],[null,s[1]]])}<div class="hero dir-hero ${d}"><div class="stack">${badge(d)}<h1>${s[1]}</h1><p class="lead">${s[2]}. ${tbd('текст подраздела')}</p><div class="row">${ctaFor(d).replace('btn sm','btn')}</div></div>${ph(s[1],'4/3')}</div>`)
+  + blk('Работы на таких объектах: вкладки и список',secH('Что делаем на таких объектах','Нажмите на услугу, чтобы прочитать описание')+svcWrap(),1)
+  + blk('Кейсы',secH('Кейсы',pr.length?'':'Раздел заполним позже')+pgrid(pr))
+  + convBlock(d);
+}
+
+function pgDirProjects(d){
+  const D = DIRS[d], pr = PROJECTS.filter(p=>p.dir===d);
+  return blk('Первый экран',`${crumbs([['#main','Главная'],[`#${d}`,D.brand],[null,'Кейсы']])}<div class="stack">${badge(d)}<h1>Кейсы ${D.brand}</h1><p class="lead">${pr.length?'Объекты направления. Те же проекты есть в общем портфолио.':'Раздел заполним позже. Пока здесь заглушки карточек.'}</p></div>`)
+  + blk('Сетка кейсов',pgrid(pr,6),1)
+  + blk('Ссылка на портфолио',`<div class="row"><a class="btn ghost" href="#projects">Все проекты группы</a></div>`);
+}
+
+let bk = {type:'Замер', day:null, time:null};
+function bookingWidget(){
+  const days=[]; const base=new Date(); base.setHours(0,0,0,0);
+  for(let i=1;days.length<10;i++){const dt=new Date(base);dt.setDate(base.getDate()+i);if(dt.getDay()!==0)days.push(dt)}
+  const fmt = dt => dt.toLocaleDateString('ru-RU',{day:'numeric',month:'short'});
+  const wd = dt => dt.toLocaleDateString('ru-RU',{weekday:'short'});
+  const times=['10:00','12:00','14:00','16:00','18:00'];
+  const busy=(di,ti)=>((di*3+ti*7)%5)===0;
+  const di = bk.day===null?-1:bk.day;
+  return `<div class="stack" id="bk">
+    <div class="stack" style="gap:6px"><span class="lbl">1. Что нужно</span><div class="slots">${['Замер','Консультация','Выезд инженера'].map(t=>`<button type="button" class="slot" data-bk-type="${t}" aria-pressed="${bk.type===t}">${t}</button>`).join('')}</div></div>
+    <div class="stack" style="gap:6px"><span class="lbl">2. День</span><div class="slots">${days.map((dt,i)=>`<button type="button" class="slot" data-bk-day="${i}" aria-pressed="${di===i}">${fmt(dt)}<small>${wd(dt)}</small></button>`).join('')}</div></div>
+    <div class="stack" style="gap:6px"><span class="lbl">3. Время</span>${di<0?'<p class="sm mut">Сначала выберите день</p>':`<div class="slots">${times.map((t,ti)=>`<button type="button" class="slot" data-bk-time="${t}" aria-pressed="${bk.time===t}" ${busy(di,ti)?'disabled':''}>${t}</button>`).join('')}</div>`}</div>
+    ${di>=0&&bk.time?`<div class="stack" style="gap:6px"><span class="lbl">4. Контакты</span><p class="sm">${bk.type}: ${fmt(days[di])}, ${bk.time}</p>${formHTML('callback')}</div>`:''}
+  </div>`;
+}
+function pgBooking(){
+  return blk('Онлайн-запись',`${crumbs([['#main','Главная'],['#home',DIRS.home.brand],[null,'Онлайн-запись']])}<div class="cta-band"><div class="stack">${badge('home')}<h1>Запись на замер</h1><p class="lead">Выберите удобные день и время. Инженер приедет, сделает замеры и обсудит задачу.</p>${tbd('на что именно запись и какие слоты — уточнить у заказчика')}</div><div>${bookingWidget()}</div></div>`);
+}
+
+let svcTab='pir';
+function svcItem(slug,open){
+  const s=S[slug], n=PROJECTS.filter(p=>p.works.includes(slug)).length;
+  return `<details class="svc-item" id="svc-${slug}"${open?' open':''}><summary><span>${s.name}</span><i aria-hidden="true">+</i></summary><div class="svc-body"><p>${s.desc}</p>${tbd('состав работ уточнить у заказчика')}<div class="chips">${s.dirs.map(d=>`<a class="badge ${d}" href="#${d}" style="text-decoration:none">${DIRS[d].brand}</a>`).join('')}</div>${n?`<a href="#projects" data-flt-work="${slug}">Проекты с этой работой: ${n} →</a>`:'<span class="sm mut">Проектов с этой работой пока нет</span>'}</div></details>`;
+}
+let svcOnly=null, svcDir=null;
+function svcBlock(open){
+  const groups=SGROUPS.map(g=>({...g,items:svcOnly?g.items.filter(x=>svcOnly.includes(x)):g.items})).filter(g=>g.items.length);
+  if(open) svcTab=grpOf(open).k;
+  if(!groups.some(g=>g.k===svcTab)) svcTab=groups[0].k;
+  const g=groups.find(x=>x.k===svcTab);
+  const cta=svcDir?'':'<button class="btn" type="button" data-form="general">Обсудить проект</button>';
+  return `<div class="svc-tabs" role="tablist" aria-label="Группы услуг">${groups.map(x=>`<button type="button" class="svc-tab" role="tab" aria-selected="${x.k===svcTab}" data-svc-tab="${x.k}">${x.name}</button>`).join('')}</div>
+  <div class="svc-panel"><div class="stack svc-left"><span class="lbl">${g.tag}</span><h2>${g.name}</h2><p class="mut">${g.desc}</p>${cta}</div>
+  <div class="svc-list">${g.items.map(s=>svcItem(s,s===open)).join('')}</div></div>`;
+}
+const svcWrap=()=>`<div id="svc-wrap" class="stack" style="gap:28px">${svcBlock()}</div>`;
+const svcList=list=>`<div class="svc-list" style="max-width:760px">${list.map(s=>svcItem(s)).join('')}</div>`;
+function setSvcScope(d){svcDir=d||null;svcOnly=d?SERVICES.filter(s=>s.dirs.includes(d)).map(s=>s.slug):null;if(d)svcTab=null}
+
+let flt = {dir:'',work:'',type:''};
+function projGrid(){
+  const list=PROJECTS.filter(p=>(!flt.dir||p.dir===flt.dir)&&(!flt.work||p.works.includes(flt.work))&&(!flt.type||p.type===flt.type));
+  return `<p class="sm mut">Найдено: ${list.length}</p>${list.length?pgrid(list,0):`<div class="card"><h3>Нет проектов по этим фильтрам</h3><p class="sm mut">Кейсы ${flt.dir?DIRS[flt.dir].brand:''} заполним позже.</p></div>`}`;
+}
+function pgProjects(){
+  const uniq = k => [...new Set(PROJECTS.map(p=>p[k]))];
+  const sel=(id,l,opts)=>`<label class="fl" for="flt-${id}">${l}<select id="flt-${id}" data-flt="${id}"><option value="">Все</option>${opts.map(o=>`<option value="${o[0]}"${flt[id]===o[0]?' selected':''}>${o[1]}</option>`).join('')}</select></label>`;
+  return blk('Первый экран',`${crumbs([['#main','Главная'],[null,'Проекты']])}<div class="stack"><h1>Проекты</h1><p class="lead">Все объекты группы. Фильтры работают.</p></div>`)
+  + blk('Фильтры и сетка',`<div class="filters">${sel('dir','Направление',DKEYS.map(d=>[d,DIRS[d].brand]))}${sel('work','Вид работ',SERVICES.map(s=>[s.slug,sname(s.slug)]))}${sel('type','Тип объекта',uniq('type').map(t=>[t,t]))}<button class="btn ghost" type="button" id="flt-reset">Сбросить</button></div><div id="pgrid">${projGrid()}</div>`,1);
+}
+function pgProject(slug){
+  const p=P[slug], D=DIRS[p.dir]; const sim=PROJECTS.filter(x=>x.slug!==slug&&(x.dir===p.dir||x.works.some(w=>p.works.includes(w)))).slice(0,3);
+  return blk('Первый экран кейса',`${crumbs([['#main','Главная'],['#projects','Проекты'],[null,p.name]])}<div class="stack">${badge(p.dir)}<h1>${p.name}</h1>${p.note?tbd(p.note):''}</div>${ph('Главное фото объекта','21/9')}`)
+  + blk('Факты',`<div class="facts"><div><span class="lbl">Город</span>${p.city}</div><div><span class="lbl">Тип объекта</span>${p.type}</div><div><span class="lbl">Направление</span>${D.brand}</div><div><span class="lbl">Площадь</span>${tbd()}</div><div><span class="lbl">Сроки</span>${tbd()}</div><div><span class="lbl">Заказчик</span>${tbd()}</div></div><div class="stack" style="gap:6px"><span class="lbl">Выполненные работы</span>${svcList(p.works)}</div>`,1)
+  + blk('Задача и решение',`<div class="g2"><div class="card"><h3>Задача</h3>${tbd('описание задачи')}</div><div class="card"><h3>Что сделали</h3>${tbd('описание работ')}</div></div>`)
+  + blk('Галерея',`<div class="g3">${['До','В процессе','После'].map(t=>ph('Фото: '+t,'4/3')).join('')}</div>`,1)
+  + blk('Похожие проекты',secH('Похожие проекты','')+pgrid(sim,0))
+  + blk('Форма',`<div class="cta-band"><div class="stack"><h2>Похожая задача?</h2><p class="mut">Расскажите об объекте — рассчитаем стоимость.</p></div>${formHTML(p.dir==='home'?'callback':'tender',p.dir)}</div>`,1);
+}
+
+function pgAbout(){
+  return blk('Первый экран',`${crumbs([['#main','Главная'],[null,'О группе']])}<div class="hero"><div class="stack"><h1>CCTV Group</h1><p class="lead">10 лет в строительстве. Совмещаем опыт крупных объектов с вниманием к деталям, как в индивидуальном ремонте.</p></div>${ph('Фото команды или офиса','4/3')}</div>`)
+  + blk('Цифры',`<div class="nums"><div class="num"><b>10 лет</b><span class="sm mut">на рынке</span></div><div class="num"><b>17</b><span class="sm mut">специалистов в штате</span></div><div class="num"><b>3+</b><span class="sm mut">региона работ</span></div><div class="num"><b>2022</b><span class="sm mut">вступили в СРО</span></div></div>`,1)
+  + blk('Структура группы',secH('Четыре направления','')+`<div class="g4">${DKEYS.map(d=>`<a class="card dcard ${d}" href="#${d}">${badge(d)}<p class="sm mut">${DIRS[d].card}</p></a>`).join('')}</div>`)
+  + blk('Как работаем с подрядчиками',`<div class="g2"><div class="card"><h3>Своя команда</h3><p class="sm mut">Инженеры, ПТО и руководители проектов в штате.</p>${tbd('уточнить состав')}</div><div class="card"><h3>Проверенные подрядчики</h3><p class="sm mut">Работы выполняют субподрядчики под нашим контролем.</p><a class="sm" href="#partners">Стать подрядчиком →</a></div></div>`,1)
+  + blk('Команда',secH('Руководство','')+`<div class="g4">${[1,2,3,4].map(i=>`<div class="card">${ph('Фото','1/1')}<h3>Имя Фамилия</h3>${tbd('должность')}</div>`).join('')}</div>`)
+  + blk('Документы и реквизиты',`<div class="g2"><a class="card" href="#documents"><h3>Документы</h3><p class="sm mut">Выписка СРО, полис страхования, допуски</p></a><div class="card"><h3>Реквизиты</h3><p class="sm mut">ООО «ЦЦТВ Плюс», ИНН 7839120090, ОГРН 1197847164998</p><p class="sm mut">${ADDRESS}</p></div></div>`,1);
+}
+const pgDocuments = () => blk('Первый экран',`${crumbs([['#main','Главная'],['#about','О группе'],[null,'Документы']])}<div class="stack"><h1>Документы</h1><p class="lead">Членство в СРО, страхование ответственности, допуски и сертификаты.</p></div>`)+blk('Документы',docsList(),1);
+const pgClients = () => blk('Первый экран',`${crumbs([['#main','Главная'],[null,'Клиенты и отзывы']])}<div class="stack"><h1>Клиенты и отзывы</h1></div>`)
+  + blk('Логотипы клиентов',logos(),1)
+  + blk('Благодарственные письма',secH('Благодарственные письма','')+`<div class="g3">${[1,2,3].map(()=>`<div class="card">${ph('Скан письма','3/4')}<h3>Компания</h3>${tbd('соберёт заказчик')}</div>`).join('')}</div>`)
+  + blk('Отзывы',secH('Отзывы','')+`<div class="g3">${[1,2,3].map(()=>`<div class="card"><p>${tbd('текст отзыва')}</p><span class="sm mut">Имя, компания, объект</span></div>`).join('')}</div>`,1);
+const pgPartners = () => blk('Первый экран',`${crumbs([['#main','Главная'],[null,'Партнёрам']])}<div class="stack"><h1>Партнёрам и подрядчикам</h1><p class="lead">Ищем субподрядчиков на объекты в Петербурге, Московской области и регионах.</p></div>`)
+  + blk('Кого ищем',secH('Кого ищем','Нажмите на вид работ, чтобы прочитать описание')+svcList(SERVICES.filter(s=>s.g==='СМР').map(s=>s.slug))+tbd('уточнить у заказчика, кого ищут сейчас'),1)
+  + blk('Условия',`<div class="g3">${['Оплата','Объёмы','Требования'].map(t=>`<div class="card"><h3>${t}</h3>${tbd()}</div>`).join('')}</div>`)
+  + blk('Анкета',`<div class="cta-band"><div class="stack"><h2>Расскажите о себе</h2><p class="mut">Свяжемся, когда появится подходящий объект.</p></div>${formHTML('partner')}</div>`,1);
+const pgCareers = () => blk('Первый экран',`${crumbs([['#main','Главная'],[null,'Карьера']])}<div class="stack"><h1>Карьера</h1><p class="lead">Работа на крупных объектах и в частных проектах.</p></div>`)
+  + blk('Вакансии',`<div class="stack">${[1,2,3].map(i=>`<details class="faq"><summary>Вакансия ${i} ${tbd('название')}</summary><p class="sm mut">Обязанности, требования, условия. ${tbd()}</p></details>`).join('')}</div>`,1)
+  + blk('Отклик',`<div class="cta-band"><div class="stack"><h2>Не нашли вакансию?</h2><p class="mut">Пришлите резюме — сохраним его.</p></div>${formHTML('vacancy')}</div>`);
+const pgContacts = () => blk('Первый экран',`${crumbs([['#main','Главная'],[null,'Контакты']])}<div class="stack"><h1>Контакты</h1></div>`)
+  + blk('Контакты и карта',`<div class="g2"><div class="stack"><div class="card"><span class="lbl">Телефон</span><b class="phone" style="font-size:18px">${PHONE}</b></div><div class="card"><span class="lbl">Почта</span><b>${EMAIL}</b></div><div class="card"><span class="lbl">Офис</span><p>${ADDRESS}</p><span class="sm mut">${tbd('часы работы')}</span></div></div>${ph('Карта: ссылка на Яндекс Карты','4/3')}</div>`,1)
+  + blk('Форма',`<div class="cta-band"><div class="stack"><h2>Напишите нам</h2></div>${formHTML('general')}</div>`);
+const pgPrivacy = () => blk('Документ',`${crumbs([['#main','Главная'],[null,'Политика ПДн']])}<div class="stack" style="max-width:70ch"><h1>Политика обработки персональных данных</h1><p class="mut">Обязательна по 152-ФЗ, потому что на сайте есть формы.</p>${tbd('текст политики')}</div>`);
+
+function allRoutes(){
+  return [
+    ['Общее',[['main','Главная'],['services','Услуги (раздел на главной)'],['projects','Проекты'],['about','О группе'],['documents','Документы'],['clients','Клиенты и отзывы'],['partners','Партнёрам'],['careers','Карьера'],['contacts','Контакты'],['privacy','Политика ПДн']]],
+    ...DKEYS.map(d=>[DIRS[d].brand,[[d,'Страница направления'],...DIRS[d].subs.map(s=>[`${d}-${s[0]}`,s[1]]),[`${d}-projects`,'Кейсы'],...(d==='home'?[['home-booking','Онлайн-запись']]:[])]]),
+    ['Услуги на главной (вкладки)',SGROUPS.map(g=>['services-'+g.k,g.name])],
+    ['Кейсы',PROJECTS.map(p=>['project-'+p.slug,p.name])],
+  ];
+}
+function pgPages(){
+  const groups=allRoutes(); const n=groups.reduce((a,g)=>a+g[1].length,0);
+  return blk('Карта прототипа',`<div class="stack"><h1>Все страницы</h1><p class="lead">${n} страниц прототипа. Квизы и формы открываются кнопками на страницах направлений.</p></div><div class="pages-list">${groups.map(g=>`<section><span class="lbl">${g[0]}</span>${g[1].map(r=>`<a href="#${r[0]}">${r[1]}</a>`).join('')}</section>`).join('')}</div><div class="row"><button class="btn ghost" type="button" data-quiz="business">Квиз Business</button><button class="btn ghost" type="button" data-quiz="home">Квиз Home</button><button class="btn ghost" type="button" data-form="tender">Форма КП</button><button class="btn ghost" type="button" data-form="callback">Обратный звонок</button></div>`);
+}
+const pg404 = () => blk('Нет страницы',`<div class="stack"><h1>Страница не найдена</h1><a class="btn" href="#main">На главную</a></div>`);
+
+/* ---------- Роутер ---------- */
+let openSvc=null, scrollId=null;
+function route(){
+  const h=(location.hash||'#main').slice(1)||'main';
+  let html, dir=null;
+  const m=h.match(/^([a-z]+)-(.+)$/);
+  if(h==='main'){svcTab='pir';html=pgMain()}
+  else if(h==='dirs'){html=pgMain()}
+  else if(DIRS[h]){dir=h;html=pgDir(h)}
+  else if(m&&DIRS[m[1]]&&m[2]==='projects'){dir=m[1];html=pgDirProjects(m[1])}
+  else if(h==='home-booking'){dir='home';html=pgBooking()}
+  else if(m&&DIRS[m[1]]&&DIRS[m[1]].subs.some(s=>s[0]===m[2])){dir=m[1];html=pgSub(m[1],m[2])}
+  else if(h==='services'){html=pgMain();scrollId='svc-sec'}
+  else if(h.startsWith('services-')&&SGROUPS.some(g=>g.k===h.slice(9))){svcTab=h.slice(9);html=pgMain();scrollId='svc-sec'}
+  else if(h.startsWith('service-')&&S[h.slice(8)]){html=pgMain(h.slice(8));openSvc=h.slice(8)}
+  else if(h==='projects') html=pgProjects();
+  else if(h.startsWith('project-')&&P[h.slice(8)]) html=pgProject(h.slice(8));
+  else html=({about:pgAbout,documents:pgDocuments,clients:pgClients,partners:pgPartners,careers:pgCareers,contacts:pgContacts,privacy:pgPrivacy,pages:pgPages}[h]||pg404)();
+  if(!dir) setSvcScope(null);
+  ctxDir=dir; renderHeader();
+  app.innerHTML=html;
+  if(h==='dirs'){document.getElementById('dirs').scrollIntoView()}
+  else if(scrollId){document.getElementById(scrollId).scrollIntoView();scrollId=null}
+  else if(openSvc){const el=document.getElementById('svc-'+openSvc);if(el)el.scrollIntoView({block:'center'});openSvc=null}
+  else window.scrollTo(0,0);
+}
+
+/* ---------- Модальное окно, квиз ---------- */
+const modal=document.getElementById('modal'), mBody=document.getElementById('m-body');
+function openModal(html){mBody.innerHTML=html;modal.hidden=false;const f=mBody.querySelector('input,button,select');if(f)f.focus()}
+function closeModal(){modal.hidden=true;mBody.innerHTML=''}
+document.getElementById('m-x').onclick=closeModal;
+modal.addEventListener('click',e=>{if(e.target===modal)closeModal()});
+document.addEventListener('keydown',e=>{if(e.key!=='Escape')return;if(!modal.hidden)closeModal();else if(!mega.hidden){closeMega();document.getElementById('menu-btn')?.focus()}});
+
+const QUIZ={
+  contract:{title:'Заявка · CCTV CONTRACT',final:'tender',qs:[
+    ['Какой у вас объект?',['Жилой комплекс или МКД','Социальный объект','Промышленный объект','Другое'],0],
+    ['Что нужно?',['Рассчитать КП','Пригласить в тендер','Консультация инженера'],0],
+    ['Какие работы нужны?',SGROUPS.map(g=>g.name),1]]},
+  business:{title:'Расчёт сметы · CCTV BUSINESS',final:'callback',qs:[
+    ['Какой у вас объект?',['Торговый центр','Коммерческое помещение','Склад','АЗС','Другое'],0],
+    ['Какие работы нужны?',['Отделка','Фасад','Кровля','Инженерные системы','Слаботочные сети','Проект и смета'],1],
+    ['Площадь объекта',['До 100 м²','100–500 м²','500–2000 м²','Больше 2000 м²'],0],
+    ['Когда начать?',['Как можно скорее','В течение месяца','Через 2–3 месяца','Пока считаю бюджет'],0]]},
+  home:{title:'Расчёт ремонта · CCTV HOME',final:'callback',qs:[
+    ['Что ремонтируем?',['Квартира','Загородный дом'],0],
+    ['Какое состояние?',['Новостройка без отделки','Вторичное жильё','Дом в коробке','Другое'],0],
+    ['Что нужно?',['Дизайн-проект','Черновая отделка','Чистовая отделка','Инженерные системы','Фасад или кровля'],1],
+    ['Площадь',['До 50 м²','50–100 м²','100–200 м²','Больше 200 м²'],0]]},
+  telecom:{title:'Заявка · CCTV TELECOM',final:'tender',qs:[
+    ['Что нужно?',['Рассчитать КП','Пригласить в тендер','Консультация'],0],
+    ['Кого вы представляете?',['Ростелеком','МГТС','МТС','Другой оператор связи'],0]]},
+};
+let qz=null;
+const leadOpt=(d,attr)=>`<button type="button" class="qopt diropt ${d}" ${attr}="${d}"><b>${DIRS[d].brand}</b><br><span class="sm mut">${DIRS[d].card}</span></button>`;
+const qhead=(title,cur,total)=>`<span class="lbl" id="m-title">${title} · шаг ${cur}${total?' из '+total:''}</span><div class="qbar"><i style="width:${total?Math.round((cur-1)/total*100):Math.min(90,cur*12)}%"></i></div>`;
+const backBtn='<button class="btn ghost sm" type="button" data-q-back>← Назад</button>';
+function startLead(d){qz={k:d?(d==='home'?'homechoice':d):'lead',step:0,a:{},lead:true,dir:d||null};modal.hidden=false;quizRender()}
+function quizRender(){
+  if(qz.k==='lead'){
+    mBody.innerHTML=`${qhead('Оставить заявку',1)}<h3>Какое направление вам нужно?</h3><p class="sm mut">Дальше зададим пару вопросов именно под вашу задачу.</p><div class="qopts">${DKEYS.map(d=>leadOpt(d,'data-lead-dir')).join('')}</div>`;
+    return;
+  }
+  if(qz.k==='homechoice'){
+    mBody.innerHTML=`${qhead('Заявка · CCTV HOME',2)}<h3>С чего начнём?</h3><div class="qopts"><button type="button" class="qopt" data-home-choice="booking"><b>Записаться на замер</b><br><span class="sm mut">Выберите день и время</span></button><button type="button" class="qopt" data-home-choice="calc"><b>Рассчитать ремонт</b><br><span class="sm mut">4 вопроса и контакты</span></button></div><div class="row">${backBtn}</div>`;
+    return;
+  }
+  if(qz.k==='booking'){
+    mBody.innerHTML=`${qhead('Запись на замер · CCTV HOME',3,3)}<h3>Когда вам удобно?</h3>${bookingWidget()}<div class="row">${backBtn}</div>`;
+    return;
+  }
+  const Q=QUIZ[qz.k], off=qz.lead?(qz.k==='home'?2:1):0, total=off+Q.qs.length+1, step=qz.step;
+  const back=(step>0||qz.lead)?backBtn:'';
+  if(step>=Q.qs.length){
+    const sum=Q.qs.map((q,i)=>`<li><span class="mut">${q[0]}</span> ${[].concat(qz.a[i]||[]).join(', ')||'—'}</li>`).join('');
+    mBody.innerHTML=`${qhead(Q.title,total,total)}<h3>${Q.final==='tender'?'Куда прислать КП?':'Куда прислать расчёт?'}</h3><ul class="sm" style="margin:0;padding-left:18px">${sum}</ul>${formHTML(Q.final,qz.k)}<div class="row">${back}</div>`;
+    return;
+  }
+  const q=Q.qs[step], multi=q[2], cur=[].concat(qz.a[step]||[]);
+  mBody.innerHTML=`${qhead(Q.title,off+step+1,total)}<h3>${q[0]}</h3>${multi?'<p class="sm mut">Можно выбрать несколько</p>':''}<div class="qopts">${q[1].map(o=>`<button type="button" class="qopt" data-q-opt="${o}" aria-pressed="${cur.includes(o)}">${o}</button>`).join('')}</div><div class="row">${back}${multi?`<button class="btn sm" type="button" data-q-next ${cur.length?'':'disabled'}>Далее →</button>`:''}</div>`;
+}
+
+/* ---------- События ---------- */
+document.addEventListener('click',e=>{
+  const t=e.target.closest('button,a,summary'); if(!t) return;
+  document.querySelectorAll('details.dd[open],details.burger[open],details.phone-dd[open]').forEach(d=>{if(!d.contains(t))d.open=false});
+  if(t.id==='menu-btn'){openMega();return}
+  if(t.id==='mega-x'){closeMega();document.getElementById('menu-btn')?.focus();return}
+  if(t.closest('#mega')){if(t.matches('a'))setTimeout(closeMega,0);else if(t.dataset.lead!==undefined)closeMega()}
+  if(t.dataset.form&&t.closest('.phone-dd')) t.closest('.phone-dd').open=false;
+  if(t.matches('a')&&t.closest('details.dd,details.burger')) t.closest('details').open=false;
+  if(t.dataset.form){openModal(formHTML(t.dataset.form,t.dataset.dir).replace('<h3 id=','<h3 id="m-title" data-id='))}
+  if(t.dataset.quiz){qz={k:t.dataset.quiz,step:0,a:{}};modal.hidden=false;quizRender()}
+  if(t.dataset.qOpt!==undefined&&qz){
+    const q=QUIZ[qz.k].qs[qz.step];
+    if(q[2]){const cur=[].concat(qz.a[qz.step]||[]);const i=cur.indexOf(t.dataset.qOpt);i<0?cur.push(t.dataset.qOpt):cur.splice(i,1);qz.a[qz.step]=cur;quizRender()}
+    else{qz.a[qz.step]=t.dataset.qOpt;qz.step++;quizRender()}
+  }
+  if(t.dataset.qNext!==undefined&&qz){qz.step++;quizRender()}
+  if(t.dataset.qBack!==undefined&&qz){
+    if(qz.k==='booking') qz.k='homechoice';
+    else if(qz.k==='homechoice'){qz.k='lead';qz.dir=null}
+    else if(qz.step>0) qz.step--;
+    else if(qz.lead){if(qz.k==='home')qz.k='homechoice';else{qz.k='lead';qz.dir=null}}
+    quizRender();
+  }
+  if(t.dataset.lead!==undefined) startLead(t.dataset.lead);
+  if(t.dataset.leadDir) startLead(t.dataset.leadDir);
+  if(t.dataset.homeChoice&&qz){if(t.dataset.homeChoice==='booking'){bk={type:'Замер',day:null,time:null};qz.k='booking'}else{qz.k='home';qz.step=0;qz.a={}}quizRender()}
+  if(t.dataset.bkType){bk.type=t.dataset.bkType;document.getElementById('bk').outerHTML=bookingWidget()}
+  if(t.dataset.bkDay){bk.day=+t.dataset.bkDay;bk.time=null;document.getElementById('bk').outerHTML=bookingWidget()}
+  if(t.dataset.bkTime){bk.time=t.dataset.bkTime;document.getElementById('bk').outerHTML=bookingWidget()}
+  if(t.dataset.svcTab){svcTab=t.dataset.svcTab;document.getElementById('svc-wrap').innerHTML=svcBlock()}
+  if(t.dataset.fltWork){flt={dir:'',work:t.dataset.fltWork,type:''}}
+  if(t.id==='flt-reset'){flt={dir:'',work:'',type:''};app.innerHTML=pgProjects()}
+  if(t.id==='lbl-toggle'){const on=document.body.classList.toggle('labels');t.textContent=on?'Скрыть подписи блоков':'Показать подписи блоков';try{localStorage.setItem('cctv-labels',on?'1':'0')}catch(_){}}
+});
+document.addEventListener('change',e=>{
+  const s=e.target.closest('[data-flt]'); if(!s) return;
+  flt[s.dataset.flt]=s.value; document.getElementById('pgrid').innerHTML=projGrid();
+});
+document.addEventListener('submit',e=>{
+  const f=e.target.closest('.js-form'); if(!f) return;
+  e.preventDefault();
+  let extra=''; if(qz&&!modal.hidden) extra=' вместе с ответами квиза'+(QUIZ[qz.k]||qz.dir?`, с меткой ${DIRS[qz.dir||qz.k].brand}`:'');
+  if(f.closest('#bk')) extra=` с записью: ${bk.type.toLowerCase()}`;
+  f.outerHTML=doneHTML(f.dataset.type,extra);
+  if(f.closest&&qz) qz=null;
+});
+window.addEventListener('hashchange',()=>{closeModal();closeMega();route()});
+
+let labelsOn=true; try{labelsOn=localStorage.getItem('cctv-labels')!=='0'}catch(_){}
+document.body.classList.toggle('labels',labelsOn);
+document.getElementById('lbl-toggle').textContent=labelsOn?'Скрыть подписи блоков':'Показать подписи блоков';
+renderFooter(); route();
+</script>
