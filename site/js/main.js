@@ -235,6 +235,15 @@
         },
       });
       svcST = hz.scrollTrigger;
+      // Fade only after horizontal progress reaches 100%, as the section unpins.
+      gsap.fromTo(bar.parentElement, { autoAlpha: 1 }, {
+        autoAlpha: 0, ease: 'none', immediateRender: false,
+        scrollTrigger: {
+          start: () => hz.scrollTrigger.end,
+          end: () => hz.scrollTrigger.end + Math.min(innerHeight * 0.16, 140),
+          scrub: true, invalidateOnRefresh: true,
+        },
+      });
       panels.forEach((p, i) => {
         // Words descend squarely into place, like courses of brickwork.
         const entry = gsap.timeline({

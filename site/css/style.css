@@ -114,6 +114,7 @@ svg { display: block; }
 .pill:active { transform: scale(.98); }
 .pill--line, .pill--dark { color: var(--ink); --pill-line: rgba(11, 13, 18, .25); }
 .pill--line:hover, .pill--dark:hover { --pill-line: var(--ink); }
+#about .pill--line:hover { --pill-line: rgba(11, 13, 18, .25); }
 
 .circ {
   width: max(36px, calc(40 * var(--u))); height: max(36px, calc(40 * var(--u)));
