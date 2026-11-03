@@ -11,9 +11,9 @@
 :root {
   --u: calc(100vw / 1440);
   /* цвета направлений, как в прототипе */
-  --c-contract: #2F63A3; --c-business: #A8721A; --c-home: #3F7F50; --c-telecom: #6A4FB3;
-  --blue: #0E37A5;
-  --blue-2: #1A47C4;
+  --c-contract: #B49A79; --c-business: #A8721A; --c-home: #3F7F50; --c-telecom: #6A4FB3;
+  --blue: #B49A79;
+  --blue-2: #B49A79;
   --ink: #0B0D12;
   --ink-2: #2A2E38;
   --muted: #6E7380;
@@ -159,7 +159,7 @@ svg { display: block; }
 .burger[aria-expanded="true"] i:last-child { top: 50%; transform: rotate(-45deg); }
 body.menu-open .hdr { color: #fff; }
 body.menu-open .hdr::before { opacity: 0; }
-body.menu-open .hdr .logo-svg path[fill="#0E37A5"] { fill: #fff; }
+body.menu-open .hdr .logo-svg path[fill="#B49A79"] { fill: #fff; }
 .logo-svg path { transition: fill .4s var(--ease); }
 
 .phone-pop { position: relative; }
@@ -176,10 +176,8 @@ body.menu-open .hdr .logo-svg path[fill="#0E37A5"] { fill: #fff; }
 .hero-bg { position: absolute; inset: 0; overflow: hidden; }
 .hero-bg img { width: 100%; height: 100%; object-fit: cover; object-position: 0% 52%; transform: scale(1.06); transform-origin: 0% 50%; }
 .hero-bg video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 0% 52%; transform: scale(1.06); transform-origin: 0% 50%; }
-.hero-video { pointer-events: none; }
-.hero-video:not([data-ready]) { opacity: 0; }
-.hero-video[data-ready] { opacity: 1; transition: opacity .7s ease; }
-.hero-shade { position: absolute; inset: 0; background: linear-gradient(180deg, #000 0%, rgba(0, 0, 0, .55) 45%, rgba(0, 0, 0, .3) 100%); }
+.hero-video { pointer-events: none; opacity: 0; z-index: 1; }
+.hero-shade { position: absolute; inset: 0; z-index: 3; background: linear-gradient(180deg, rgba(0, 0, 0, .94) 0%, rgba(0, 0, 0, .66) 45%, rgba(0, 0, 0, .5) 100%); }
 
 .hero-brand { position: absolute; left: calc(580 * var(--u)); top: 41.6%; }
 .hero-title { font-family: var(--nf); font-weight: 400; font-size: calc(110 * var(--u)); line-height: 1.036; white-space: nowrap; letter-spacing: 0; margin-left: -.02em; }
@@ -305,7 +303,6 @@ body.menu-open .hdr .logo-svg path[fill="#0E37A5"] { fill: #fff; }
 .svc-photo img { width: 100%; height: 100%; object-fit: cover; transform: scale(1.15); }
 .svc-body { min-width: 0; }
 .svc-word { font-family: var(--nf); font-weight: 400; font-size: calc(34 * var(--u)); line-height: 1; text-transform: uppercase; letter-spacing: -.01em; margin-top: -.08em; }
-.svc-word { perspective: 800px; }
 .svc-title-word { display: inline-block; }
 .svc-meta { display: flex; gap: 14px; margin-top: calc(18 * var(--u)); font-size: var(--fs-label); text-transform: uppercase; letter-spacing: .06em; color: var(--muted); }
 .svc-meta b { font-weight: 400; color: var(--blue); }
@@ -466,7 +463,7 @@ body.menu-open .hdr .logo-svg path[fill="#0E37A5"] { fill: #fff; }
 .ftr-cols .logo-svg { width: max(130px, calc(157 * var(--u))); }
 .ftr-cols ul { display: grid; gap: 8px; }
 .ftr-cols a, .ftr-cols p { font-size: max(11px, calc(12 * var(--u))); line-height: 1.5; color: rgba(255,255,255,.85); transition: color .3s var(--ease); }
-.ftr-cols a:hover { color: #6F8FFF; }
+.ftr-cols a:hover { color: #B49A79; }
 .ftr-cols p { padding-right: var(--pad); line-height: 1.4; }
 .ftr-word {
   margin-top: calc(110 * var(--u)); padding: 0 var(--pad); font-family: var(--nf); font-size: calc(199 * var(--u)); line-height: .78;
@@ -697,7 +694,7 @@ html.anim [data-reveal].is-in { opacity: 1; transform: none; transition: opacity
 .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 .credit { justify-self: end; display: inline-flex; align-items: center; gap: 10px; color: rgba(255,255,255,.5); transition: color .3s var(--ease); }
 .credit .blick { height: max(9px, calc(10 * var(--u))); width: auto; aspect-ratio: 4072 / 855; color: #fff; transition: color .3s var(--ease); }
-.credit:hover, .credit:hover .blick { color: #6F8FFF; }
+.credit:hover, .credit:hover .blick { color: #B49A79; }
 @media (max-width: 1023px) { .credit { justify-self: start; } }
 /* цвет направления в квизе и в форме */
 .q-opt.dirc { border-left: 3px solid var(--c); }

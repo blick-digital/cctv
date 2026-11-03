@@ -22,12 +22,12 @@
     canvas.height = Math.round(height * dpr);
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     gradient = ctx.createLinearGradient(0, 0, width, 0);
-    gradient.addColorStop(0, 'rgba(92,137,255,.06)');
-    gradient.addColorStop(0.08, 'rgba(92,137,255,.2)');
-    gradient.addColorStop(0.35, 'rgba(127,162,255,.28)');
-    gradient.addColorStop(0.7, 'rgba(127,162,255,.3)');
-    gradient.addColorStop(0.92, 'rgba(92,137,255,.2)');
-    gradient.addColorStop(1, 'rgba(92,137,255,.06)');
+    gradient.addColorStop(0, 'rgba(180,154,121,.06)');
+    gradient.addColorStop(0.08, 'rgba(180,154,121,.2)');
+    gradient.addColorStop(0.35, 'rgba(180,154,121,.28)');
+    gradient.addColorStop(0.7, 'rgba(180,154,121,.3)');
+    gradient.addColorStop(0.92, 'rgba(180,154,121,.2)');
+    gradient.addColorStop(1, 'rgba(180,154,121,.06)');
   }
 
   function draw(now) {

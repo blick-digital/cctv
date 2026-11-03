@@ -10,10 +10,6 @@
 
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const hasGsap = !!(window.gsap && window.ScrollTrigger);
-  const heroVideo = $('.hero-video');
-  if (heroVideo && !reduce) {
-    heroVideo.addEventListener('playing', () => heroVideo.setAttribute('data-ready', ''), { once: true });
-  }
   if (!reduce && hasGsap) document.documentElement.classList.add('anim');
 
   /* ================= Отрисовка из данных ================= */
@@ -240,7 +236,7 @@
       });
       svcST = hz.scrollTrigger;
       panels.forEach((p, i) => {
-        // Words settle from above as the photo turns into place; the trigger stays still.
+        // Words descend squarely into place, like courses of brickwork.
         const entry = gsap.timeline({
           defaults: { ease: 'power2.out' },
           scrollTrigger: i === 0
@@ -260,11 +256,10 @@
             : { trigger: $('.svc-body', p), containerAnimation: hz, start: 'left 98%', end: 'left 55%', scrub: true },
         });
         textEntry.fromTo($$('.svc-title-word', p), {
-            yPercent: -100, rotationX: -55, rotationZ: -3, opacity: 0,
-            transformOrigin: '50% 100%',
+            yPercent: -120, opacity: 0,
           }, {
-            yPercent: 0, rotationX: 0, rotationZ: 0, opacity: 1,
-            stagger: 0.12, duration: 0.85, ease: 'power2.inOut',
+            yPercent: 0, opacity: 1,
+            stagger: { each: 0.18, from: 'end' }, duration: 0.8, ease: 'power2.inOut',
           }, 0)
           .fromTo($$('.svc-meta, .svc-desc, .acc-item', p), {
             y: -14, opacity: 0,
