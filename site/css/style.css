@@ -272,9 +272,18 @@ body.menu-open .hdr .logo-svg path[fill="#B49A79"] { fill: #fff; }
 }
 .about-img { position: relative; overflow: hidden; height: calc(221 * var(--u)); }
 .about-img img { position: absolute; max-width: none; height: auto; }
+.about-img::after {
+  content: ''; position: absolute; inset: 0; background: var(--paper);
+  transform: scaleX(0); transform-origin: right center; pointer-events: none;
+}
+.about-img.is-pending::after { transform: scaleX(1); }
+.about-img.is-in::after { animation: about-photo-uncover 1.35s var(--ease-io) both; }
+.about-img.is-in img { animation: about-photo-settle 1.5s var(--ease) both; }
+@keyframes about-photo-uncover { from { transform: scaleX(1); } to { transform: scaleX(0); } }
+@keyframes about-photo-settle { from { transform: translateX(-32px); } to { transform: translateX(0); } }
 /* Кадрирование фотографий повторяет два окна в макете Figma. */
 .about-img--engineering { grid-column: 1 / 3; grid-row: 1; }
-.about-img--engineering img { width: 100%; left: 0; top: -171.1878%; }
+.about-img--engineering img { width: 100%; height: 100%; left: 0; top: 0; object-fit: cover; object-position: center 72%; }
 .about-img--building { grid-column: 3 / 6; grid-row: 2; }
 .about-img--building img { width: 109.1667%; left: -.0437%; top: -71.2896%; }
 .nums .num:nth-child(n+3) { padding-bottom: 0; }
@@ -284,6 +293,18 @@ body.menu-open .hdr .logo-svg path[fill="#B49A79"] { fill: #fff; }
   display: grid; gap: calc(30 * var(--u)); justify-items: start;
 }
 .about-text .lead { width: calc(513 * var(--u)); max-width: 100%; font-size: calc(18 * var(--u)); line-height: calc(22 * var(--u)); }
+.about-copy-line { display: block; }
+[data-about-copy].is-pending .about-copy-line { opacity: 0; transform: translateY(12px); }
+[data-about-copy].is-in .about-copy-line { animation: about-copy-enter .9s var(--ease) both; animation-delay: var(--copy-delay, 0s); }
+.about-copy-line:nth-child(2) { --copy-delay: .1s; }
+.about-copy-line:nth-child(3) { --copy-delay: .2s; }
+.about-copy-line:nth-child(4) { --copy-delay: .3s; }
+@keyframes about-copy-enter { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+@media (prefers-reduced-motion: reduce) {
+  .about-img.is-pending::after { transform: scaleX(0); }
+  .about-img.is-in::after, .about-img.is-in img, [data-about-copy].is-in .about-copy-line { animation: none; }
+  [data-about-copy].is-pending .about-copy-line { opacity: 1; transform: none; }
+}
 .about-text .pill { width: calc(273 * var(--u)); }
 .about-text .pill-dot img { transition: transform .6s var(--ease); }
 .about-text .pill:hover .pill-dot img { transform: rotate(45deg); }
@@ -620,7 +641,11 @@ html.anim [data-reveal].is-in { opacity: 1; transform: none; transition: opacity
   .about-img--building { aspect-ratio: 3.8 / 1; }
   .about-text { padding-left: 0; gap: 28px; }
   .about-text .lead { width: auto; font-size: 18px; line-height: 1.4; }
-  .about-break { display: none; }
+  .about-copy-line { display: inline; }
+  [data-about-copy].is-pending { opacity: 0; transform: translateY(12px); }
+  [data-about-copy].is-in { animation: about-copy-enter .9s var(--ease) both; }
+  [data-about-copy].is-pending .about-copy-line { opacity: 1; transform: none; }
+  [data-about-copy].is-in .about-copy-line { animation: none; }
   .about-text .pill { width: auto; }
   .nums.about-nums { grid-template-columns: 1fr 1fr; padding-top: 0; column-gap: 20px; }
   .about-nums .num { gap: 20px; }

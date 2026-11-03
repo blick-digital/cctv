@@ -300,14 +300,6 @@
         });
       });
       // фото с параллаксом
-      // О группе: окно раскрывается слева направо, фотография мягко встаёт на место.
-      $$('.about-img').forEach(frame => {
-        gsap.timeline({ scrollTrigger: { trigger: frame, start: 'top 88%', once: true } })
-          .fromTo(frame, { clipPath: 'inset(0% 100% 0% 0%)' }, {
-            clipPath: 'inset(0% 0% 0% 0%)', duration: 1.35, ease: 'power3.inOut', clearProps: 'clipPath',
-          })
-          .fromTo($('img', frame), { x: -32 }, { x: 0, duration: 1.5, ease: 'power3.out', clearProps: 'transform' }, 0);
-      });
       $$('[data-parallax] img').forEach(img => {
         gsap.fromTo(img, { yPercent: -7 }, { yPercent: 7, ease: 'none', scrollTrigger: { trigger: img.parentElement, start: 'top bottom', end: 'bottom top', scrub: true } });
       });
@@ -351,6 +343,23 @@
     addEventListener('load', () => ScrollTrigger.refresh());
   } else {
     $$('.step').forEach(s => s.classList.add('is-on'));
+  }
+
+  /* О группе: отдельный наблюдатель, без clip-path и скрытия фотографии в Safari. */
+  if (!reduce && 'IntersectionObserver' in window) {
+    const aboutItems = $$('.about-img, [data-about-copy]');
+    const aboutObserver = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (!entry.isIntersecting) return;
+        entry.target.classList.remove('is-pending');
+        entry.target.classList.add('is-in');
+        aboutObserver.unobserve(entry.target);
+      });
+    }, { rootMargin: '0px 0px -10% 0px' });
+    aboutItems.forEach(el => {
+      el.classList.add('is-pending');
+      aboutObserver.observe(el);
+    });
   }
 
   /* ---- появление блоков ---- */
