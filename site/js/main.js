@@ -53,7 +53,7 @@
     <article class="svc-panel" id="svc-${g.k}" aria-labelledby="svc-${g.k}-t">
       <figure class="svc-photo"><img src="${g.img}" alt="" loading="lazy"></figure>
       <div class="svc-body">
-        <h3 class="svc-word" id="svc-${g.k}-t">${g.name}</h3>
+        <h3 class="svc-word" id="svc-${g.k}-t" aria-label="${g.name}">${g.name.split(' ').map(word => `<span class="svc-title-word" aria-hidden="true">${word}</span>`).join(' ')}</h3>
         <p class="svc-meta"><b>${pad2(i + 1)} / ${pad2(D.SGROUPS.length)}</b><span>${g.tag}</span></p>
         <p class="svc-desc">${g.desc}</p>
         <ul class="acc">${g.items.map(s => {
@@ -239,7 +239,38 @@
         },
       });
       svcST = hz.scrollTrigger;
-      panels.forEach(p => {
+      panels.forEach((p, i) => {
+        // Words settle from above as the photo turns into place; the trigger stays still.
+        const entry = gsap.timeline({
+          defaults: { ease: 'power2.out' },
+          scrollTrigger: i === 0
+            ? { trigger: pin, start: 'top 85%', end: 'top 20%', scrub: true }
+            : { trigger: p, containerAnimation: hz, start: 'left 98%', end: 'left 28%', scrub: true },
+        });
+        entry.fromTo($('.svc-photo', p), {
+          clipPath: 'inset(7% 5% 7% 5%)', y: 24, rotationY: 12, rotationZ: -3, scale: 0.88,
+          transformOrigin: 'center center',
+        }, {
+          clipPath: 'inset(0% 0% 0% 0%)', y: 0, rotationY: 0, rotationZ: 0, scale: 1, duration: 1,
+        }, 0);
+        const textEntry = gsap.timeline({
+          defaults: { ease: 'power2.out' },
+          scrollTrigger: i === 0
+            ? { trigger: pin, start: 'top 85%', end: 'top 20%', scrub: true }
+            : { trigger: $('.svc-body', p), containerAnimation: hz, start: 'left 98%', end: 'left 55%', scrub: true },
+        });
+        textEntry.fromTo($$('.svc-title-word', p), {
+            yPercent: -100, rotationX: -55, rotationZ: -3, opacity: 0,
+            transformOrigin: '50% 100%',
+          }, {
+            yPercent: 0, rotationX: 0, rotationZ: 0, opacity: 1,
+            stagger: 0.12, duration: 0.85, ease: 'power2.inOut',
+          }, 0)
+          .fromTo($$('.svc-meta, .svc-desc, .acc-item', p), {
+            y: -14, opacity: 0,
+          }, {
+            y: 0, opacity: 1, stagger: 0.065, duration: 0.65,
+          }, 0.18);
         gsap.fromTo($('.svc-photo img', p), { xPercent: -7, scale: 1.18 }, {
           xPercent: 7, scale: 1.18, ease: 'none',
           scrollTrigger: { trigger: p, containerAnimation: hz, start: 'left right', end: 'right left', scrub: true },
