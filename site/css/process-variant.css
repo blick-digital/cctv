@@ -1,0 +1,39 @@
+.process-variant { display: block; margin-top: 12px; font: 400 10px/1.4 var(--nf); color: var(--muted); letter-spacing: 0; text-transform: none; }
+.process-two { --p2-unit: min(var(--u), calc(100svh / 896.2)); background: var(--paper); }
+.p2-stage { position: relative; }
+.process-two-head .h2 { font-size: calc(56 * var(--p2-unit)); line-height: 1.02; letter-spacing: -.01em; }
+.process-two-dial { position: relative; width: calc(340 * var(--p2-unit)); aspect-ratio: 5 / 7; margin: calc(65 * var(--u)) 0 0 calc(110 * var(--u)); perspective: 1200px; }
+.p2-photos { position: absolute; inset: 0; }
+.p2-photo { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transform: rotate(-3deg); box-shadow: 0 14px 35px rgba(11,13,18,.09); }
+.p2-photo:first-child { opacity: 1; }
+.process-two-list { margin: calc(45 * var(--u)) var(--pad) 0 calc(580 * var(--u)); }
+.p2-step { display: grid; grid-template-columns: calc(178 * var(--u)) minmax(0, 1fr); align-items: start; padding-bottom: calc(75 * var(--p2-unit)); }
+.p2-number { font: 400 calc(120 * var(--p2-unit))/1 var(--nf); letter-spacing: -.03em; color: #0e37a5; }
+.p2-step > div { position: relative; min-height: calc(112 * var(--p2-unit)); }
+.p2-k, .p2-title, .p2-description, .p2-number { text-box-trim: trim-both; text-box-edge: cap alphabetic; }
+.p2-k { position: absolute; top: 0; left: 0; display: block; font: 400 calc(16 * var(--p2-unit))/1.45 var(--nf); letter-spacing: calc(2.5 * var(--p2-unit)); color: var(--muted); text-transform: uppercase; }
+.p2-title { position: absolute; top: calc(33 * var(--p2-unit)); left: 0; right: 0; font: 400 calc(50 * var(--p2-unit))/1.2 var(--nf); text-transform: uppercase; letter-spacing: 0; margin: 0; }
+.p2-description { position: absolute; top: calc(85 * var(--p2-unit)); left: 0; right: 0; max-width: calc(560 * var(--u)); font: 400 calc(16 * var(--p2-unit))/1.3 var(--gl); color: var(--muted); }
+.process-two.has-process-motion { height: 450svh; padding: 0; overflow: visible; }
+.has-process-motion .p2-stage { position: sticky; top: 0; height: 100svh; min-height: 620px; padding-top: calc(180 * var(--p2-unit)); overflow: hidden; }
+.has-process-motion .process-two-dial { position: absolute; top: calc(290 * var(--p2-unit)); margin-top: 0; }
+.has-process-motion .process-two-list { position: absolute; top: calc(448 * var(--p2-unit)); left: calc(580 * var(--u)); right: var(--pad); height: calc(390 * var(--p2-unit)); margin: 0; }
+.has-process-motion .p2-step { position: absolute; inset: 0 0 auto; padding: 0; }
+.has-process-motion .p2-step:not(.is-current) { pointer-events: none; }
+.has-process-motion .p2-step:not(.is-current) .p2-number,
+.has-process-motion .p2-step:not(.is-current) .p2-k,
+.has-process-motion .p2-step:not(.is-current) .p2-title,
+.has-process-motion .p2-step:not(.is-current) .p2-description { color: var(--muted); }
+@media (max-width: 1023px) {
+  .process-two { --p2-unit: 1px; }
+  .process-two-head .h2 { font-size: 30px; }
+  .process-two-head br { display: none; }
+  .process-two-dial { width: min(65vw, 300px); margin: 50px auto; }
+  .process-two-list { margin: 0 var(--pad); }
+  .p2-step { grid-template-columns: 90px 1fr; padding-bottom: 35px; }
+  .p2-step > div { min-height: 0; display: grid; gap: 12px; }
+  .p2-number { font-size: 64px; }
+  .p2-k { position: static; font-size: 14px; }
+  .p2-title { position: static; font-size: 23px; }
+  .p2-description { position: static; font-size: 16px; max-width: 100%; }
+}

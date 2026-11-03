@@ -426,6 +426,8 @@ body.menu-open .hdr .logo-svg path[fill="#B49A79"] { fill: #fff; }
 
 /* ---------- Нам доверяют ---------- */
 .trust { padding-bottom: calc(140 * var(--u)); }
+.trust--underlay { min-height: 100svh; background: var(--paper); z-index: 1; }
+.contact--overlap { z-index: 2; }
 .marquee { margin-top: calc(100 * var(--u)); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); overflow: hidden; }
 .marquee-track { display: flex; width: max-content; will-change: transform; }
 .logo-cell { width: calc(280 * var(--u)); min-width: 180px; height: calc(150 * var(--u)); min-height: 100px; display: grid; place-items: center; border-right: 1px solid var(--line); padding: 0 calc(40 * var(--u)); }

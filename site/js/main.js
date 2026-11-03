@@ -338,6 +338,37 @@
       },
     });
 
+    // «Заявка» накрывает последний экран «Нам доверяют» естественным скроллом.
+    mm.add('(prefers-reduced-motion: no-preference)', () => {
+      const trust = $('#clients');
+      const contact = $('#contacts');
+      trust.classList.add('trust--underlay');
+      contact.classList.add('contact--overlap');
+      const trustPinTop = () => {
+        const style = getComputedStyle(trust);
+        const top = parseFloat(style.paddingTop);
+        const bottom = parseFloat(style.paddingBottom);
+        const contentHeight = trust.offsetHeight - top - bottom;
+        // Центрируем содержимое, а не внешнюю секцию с большими полями.
+        // На узких экранах длинный раздел сначала можно дочитать до конца.
+        return contentHeight > innerHeight - 80
+          ? innerHeight - trust.offsetHeight
+          : (innerHeight - contentHeight) / 2 - top;
+      };
+      ScrollTrigger.create({
+        trigger: trust,
+        start: () => `top ${trustPinTop()}px`,
+        end: () => '+=' + (trust.offsetHeight + trustPinTop()),
+        pin: true,
+        pinSpacing: false,
+        invalidateOnRefresh: true,
+      });
+      return () => {
+        trust.classList.remove('trust--underlay');
+        contact.classList.remove('contact--overlap');
+      };
+    });
+
     // пересчёт после загрузки шрифтов и картинок
     document.fonts && document.fonts.ready.then(() => ScrollTrigger.refresh());
     addEventListener('load', () => ScrollTrigger.refresh());
@@ -390,8 +421,9 @@
     hdr.classList.toggle('is-light', !overDark);
     const inPin = stageST && stageST.isActive; // в услугах шапка прячется, чтобы раздел помещался целиком
     const down = y > lastY + 4, up = y < lastY - 4;
+    const inContactOrFooter = $('#contacts').getBoundingClientRect().top < innerHeight;
     if (!document.body.classList.contains('menu-open')) {
-      if (svcST && svcST.isActive) hdr.classList.add('is-hidden'); // в «Услугах» шапки нет даже при прокрутке вверх
+      if (inContactOrFooter || (svcST && svcST.isActive)) hdr.classList.add('is-hidden');
       else if (down && y > 300 && !inPin) hdr.classList.add('is-hidden');
       else if (up || y < 300) hdr.classList.remove('is-hidden');
     }
