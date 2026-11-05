@@ -1,0 +1,295 @@
+<!doctype html>
+<html lang="ru" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CCTV Group — тёмная версия</title>
+<meta name="description" content="CCTV Group: проектирование и строительно-монтажные работы полного цикла. Крупные объекты, коммерческая недвижимость, частный ремонт и работы для операторов связи.">
+<meta name="theme-color" content="#141414">
+<link rel="preload" href="assets/img/hero-handshake.jpg" as="image">
+<link rel="icon" href="assets/img/favicon.svg?v=2" type="image/svg+xml">
+<script>document.documentElement.classList.add('hero-loading');</script>
+<link rel="stylesheet" href="css/style.css?v=74">
+<link rel="stylesheet" href="css/process-variant.css?v=6">
+<link rel="stylesheet" href="css/fonts-dark.css?v=1">
+<link rel="stylesheet" href="css/dark.css?v=18">
+</head>
+<body>
+
+<!-- Иконки -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-arrow" viewBox="0 0 27 27"><path d="M20.5061 6.36397C16.9914 9.87869 16.9914 15.5772 20.5061 19.0919" fill="none" stroke="currentColor" stroke-width="2"/><path d="M20.5061 6.36395C16.9914 9.87867 11.2929 9.87867 7.77815 6.36395" fill="none" stroke="currentColor" stroke-width="2"/><line x1="20.5061" y1="6.36395" x2="6.36394" y2="20.5061" stroke="currentColor" stroke-width="2"/></symbol>
+  <symbol id="i-phone" viewBox="0 0 24 24"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 4v16M4 12h16" fill="none" stroke="currentColor" stroke-width="1.2"/></symbol>
+</svg>
+
+<a class="skip" href="#main">К содержимому</a>
+
+<!-- Шапка -->
+<header class="hdr" id="hdr">
+  <a class="logo" href="#top" aria-label="CCTV Group — на главную">
+    <img class="logo-svg" src="assets/img/logo-cctv-dark.svg" alt="CCTV Group" width="157" height="34">
+  </a>
+  <nav class="nav" aria-label="Главное меню">
+    <a href="#directions" data-nav>/ Направления</a>
+    <a href="#about" data-nav>/ О группе</a>
+    <a href="#services" data-nav>/ Услуги</a>
+    <a href="#projects" data-nav>/ Проекты</a>
+    <a href="#clients" data-nav>/ Клиенты</a>
+    <a href="#contacts" data-nav>/ Контакты</a>
+  </nav>
+  <div class="hdr-acts">
+    <div class="phone-pop">
+      <button class="circ" type="button" id="phone-btn" aria-label="Телефон" aria-expanded="false" aria-controls="phone-panel"><svg><use href="#i-phone"/></svg></button>
+      <div class="phone-panel" id="phone-panel" hidden>
+        <span class="eyebrow">Телефон</span>
+        <a class="phone-big" data-phone></a>
+        <a class="sm" data-email></a>
+        <button class="pill pill--dark" type="button" data-open="callback"><span>Заказать звонок</span><i class="pill-dot"><svg><use href="#i-arrow"/></svg></i></button>
+      </div>
+    </div>
+    <button class="circ burger" type="button" id="menu-btn" aria-label="Открыть меню" aria-expanded="false" aria-controls="menu"><i></i><i></i></button>
+  </div>
+</header>
+
+<main id="main">
+
+  <!-- 1–2. Первый экран и направления: одна сцена, пилюли раскрываются в карточки -->
+  <section class="stage" id="top" aria-label="CCTV Group">
+    <div class="hero" id="hero">
+      <div class="hero-bg" aria-hidden="true">
+        <img src="assets/img/hero-handshake.jpg" alt="" fetchpriority="high">
+        <video class="hero-video" autoplay muted playsinline preload="auto" poster="assets/img/hero-handshake.jpg">
+          <source src="assets/video/hero-handshake.mp4" type="video/mp4">
+        </video>
+        <video class="hero-video" muted playsinline preload="auto">
+          <source src="assets/video/hero-handshake.mp4" type="video/mp4">
+        </video>
+        <i class="hero-shade"></i>
+      </div>
+
+      <div class="hero-brand">
+        <div class="hero-signature">
+          <i aria-hidden="true"></i>
+          <p>[ Знаем цену решений и ценность отношений ]</p>
+          <i aria-hidden="true"></i>
+        </div>
+        <i class="hero-signature-edge" aria-hidden="true"></i>
+        <h1 class="hero-title"><span class="line-mask"><span>CCTV GROUP</span></span></h1>
+        <div class="hero-row">
+          <button class="pill pill--cta" type="button" data-open="lead"><span>Оставить заявку</span><i class="pill-dot"><svg><use href="#i-arrow"/></svg></i></button>
+          <p class="hero-sub"><span>Construction</span><span>&amp; Engineering</span></p>
+        </div>
+      </div>
+
+      <i class="hero-line hero-line--long" aria-hidden="true"></i>
+      <i class="hero-line hero-line--short" aria-hidden="true"></i>
+      <p class="hero-lead"><span>Проектирование</span><span>и строительно-монтажные</span><span class="indent">работы полного цикла</span></p>
+
+      <nav class="hero-pills" aria-label="Направления" data-hero-pills></nav>
+    </div>
+
+    <div class="dirs" id="directions">
+      <div class="dirs-head">
+        <span class="label">/ Направления</span>
+        <h2 class="dirs-title">Четыре направления группы</h2>
+        <p class="dirs-text">От крупных строек и коммерческих объектов до частного ремонта и работ для операторов связи</p>
+      </div>
+      <div class="dirs-cards" data-dir-cards></div>
+    </div>
+  </section>
+
+  <!-- 3. О нас -->
+  <section class="sec about" id="about">
+    <div class="grid">
+      <span class="label c1" data-reveal>/ О группе</span>
+      <h2 class="statement c3-5" data-split>Строим крупные объекты<br>и&nbsp;делаем частный ремонт<br>с&nbsp;одинаковым вниманием<br>к&nbsp;деталям</h2>
+    </div>
+    <div class="grid about-body">
+      <span class="about-accent" aria-hidden="true"></span>
+      <figure class="about-img about-img--engineering">
+        <img src="assets/img/about-engineering-dark.png" alt="Современный общественный интерьер с бетонными колоннами и интегрированными инженерными системами" loading="eager">
+      </figure>
+      <div class="about-text">
+        <p class="lead" data-about-copy><span class="about-copy-line">CCTV Group 10 лет работает на жилых комплексах,</span> <span class="about-copy-line">школах, поликлиниках и коммерческих объектах.</span> <span class="about-copy-line">Ведём полный цикл: проектируем, считаем смету</span> <span class="about-copy-line">и выполняем работы от фасадов до чистовой отделки.</span></p>
+        <a class="pill pill--line" href="#" data-proto="about" data-reveal><span>Подробнее о группе</span><i class="pill-dot"><img src="assets/img/about-arrow.svg" alt="" width="26.7" height="26.7"></i></a>
+      </div>
+      <dl class="nums about-nums about-nums--primary">
+        <div class="num" data-reveal><dt><b data-count="10">10</b><em>лет</em></dt><dd>на рынке</dd></div>
+        <div class="num" data-reveal><dt><b data-count="100">100</b><em class="plus">+</em></dt><dd>сданных объектов</dd></div>
+      </dl>
+      <figure class="about-img about-img--building">
+        <img src="assets/img/about-building.jpg" alt="Фасад современного жилого комплекса в вечернем освещении" loading="lazy">
+      </figure>
+      <dl class="nums about-nums about-nums--secondary">
+        <div class="num" data-reveal><dt><b data-count="3">3</b><em class="plus">+</em></dt><dd>региона:<br>СПб, Мособласть, Ижевск</dd></div>
+        <div class="num" data-reveal><dt><b>СРО</b></dt><dd>член с 2022 года,<br>ответственность застрахована</dd></div>
+      </dl>
+    </div>
+  </section>
+
+  <!-- 4. Услуги -->
+  <section class="sec svc" id="services">
+    <div class="grid svc-top">
+      <div class="c1-2 svc-index">
+        <span class="label" data-reveal>/ Услуги</span>
+        <ol class="svc-index-list" data-svc-index data-reveal></ol>
+      </div>
+      <h2 class="h2 svc-title c3-5" data-split>Полный цикл: проектирование и строительно-монтажные работы</h2>
+    </div>
+    <div class="svc-gap" aria-hidden="true"></div>
+    <div class="svc-pin">
+      <div class="svc-track" data-svc-track></div>
+      <div class="svc-progress" aria-hidden="true"><i data-svc-bar></i></div>
+    </div>
+  </section>
+
+  <!-- 5. Проекты -->
+  <section class="sec projects" id="projects">
+    <div class="grid">
+      <div class="c1-2 sec-side">
+        <span class="label" data-reveal>/ Проекты</span>
+        <a class="pill pill--line" href="#" data-proto="projects" data-reveal><span>Все проекты</span><i class="pill-dot"><svg><use href="#i-arrow"/></svg></i></a>
+      </div>
+      <h2 class="h2 c3-5" data-split>Школы, жилые<br>комплексы,<br>поликлиники, отели</h2>
+    </div>
+    <div class="grid prj-grid" data-projects></div>
+  </section>
+
+  <!-- 6. Как мы работаем -->
+  <section class="sec steps" id="process">
+    <div class="grid">
+      <span class="label c1" data-reveal>/ Как мы работаем <small class="process-variant">(первый вариант)</small></span>
+      <h2 class="h2 c3-5" data-split>От запроса до сдачи объекта — пять шагов</h2>
+    </div>
+    <div class="steps-wrap">
+      <div class="steps-rail" aria-hidden="true"><i data-steps-bar></i></div>
+      <ol class="steps-list" data-steps></ol>
+    </div>
+  </section>
+
+  <section class="sec process-two" id="process-two" aria-label="Как мы работаем — второй вариант">
+    <div class="p2-stage">
+    <div class="grid process-two-head">
+      <span class="label c1">/ Как мы работаем <small class="process-variant">(второй вариант)</small></span>
+      <h2 class="h2 c3-5" data-split>От запроса до сдачи<br> объекта — пять шагов</h2>
+    </div>
+    <div class="process-two-dial" aria-hidden="true">
+        <div class="p2-photos" data-process-photos></div>
+    </div>
+    <ol class="process-two-list" data-process-two></ol>
+    </div>
+  </section>
+
+  <!-- 7. Нам доверяют -->
+  <section class="sec trust" id="clients">
+    <div class="grid">
+      <span class="label c1" data-reveal>/ Нам доверяют</span>
+      <h2 class="h2 c3-5" data-split>Девелоперы<br>и&nbsp;генподрядчики,<br>с&nbsp;которыми работаем</h2>
+    </div>
+    <div class="marquee" aria-label="Клиенты">
+      <div class="marquee-track" data-marquee></div>
+    </div>
+    <div class="grid docs">
+      <div class="c1-2 docs-side" data-reveal>
+        <p class="sm muted">Члены СРО с 2022 года.<br>Ответственность застрахована.</p>
+      </div>
+      <div class="c3-5 docs-list" data-docs></div>
+    </div>
+  </section>
+
+  <!-- 8. Заявка -->
+  <section class="sec contact" id="contacts">
+    <div class="contact-bg" aria-hidden="true"><img src="assets/img/form-bg.jpg" alt="" loading="lazy"><i></i></div>
+    <div class="grid contact-grid">
+      <div class="c1-2 contact-side">
+        <span class="label" data-reveal>/ Заявка</span>
+        <h2 class="contact-title" data-split>Расскажите<br>о&nbsp;задаче</h2>
+        <p class="contact-text" data-reveal>Укажите направление — заявка сразу попадёт нужному менеджеру.</p>
+        <div class="contact-links" data-reveal>
+          <a class="phone-big" data-phone></a>
+          <a data-email></a>
+          <span class="sm" data-address></span>
+        </div>
+      </div>
+      <form class="c3-5 form form--dark js-form" data-title="Заявка" novalidate>
+        <fieldset class="chips-field">
+          <legend>Направление</legend>
+          <div class="chips" data-dir-chips></div>
+        </fieldset>
+        <div class="form-row">
+          <label class="field"><span>Имя</span><input name="name" type="text" autocomplete="name" required></label>
+          <label class="field"><span>Телефон</span><input name="phone" type="tel" autocomplete="tel" placeholder="+7" required></label>
+        </div>
+        <label class="field"><span>Задача</span><textarea name="msg" rows="3"></textarea></label>
+        <div class="form-foot">
+          <label class="check"><input type="checkbox" required><i></i><span>Я подтверждаю ознакомление и даю <a href="#" data-legal="consent" target="_blank">Согласие на обработку</a> моих персональных данных в порядке и на условиях, указанных в <a href="#" data-legal="privacy" target="_blank">Политике обработки персональных данных</a></span></label>
+          <button class="pill pill--cta" type="submit"><span>Отправить</span><i class="pill-dot"><svg><use href="#i-arrow"/></svg></i></button>
+        </div>
+      </form>
+    </div>
+  </section>
+</main>
+
+<!-- 9. Подвал -->
+<footer class="ftr">
+  <div class="grid ftr-cols">
+    <div class="c1"><img class="logo-svg" src="assets/img/logo-cctv-dark.svg" alt="CCTV Group" width="157" height="34"></div>
+    <div class="c2"><span class="label">/ Направления</span><ul data-ftr-dirs></ul></div>
+    <div class="c3"><span class="label">/ Компания</span><ul data-ftr-company></ul></div>
+    <div class="c4"><span class="label">/ Контакты</span><ul><li><a data-phone></a></li><li><a data-email></a></li></ul></div>
+    <div class="c5"><span class="label">/ Адрес</span><p data-address></p></div>
+  </div>
+  <p class="ftr-word" aria-hidden="true" data-fluid-text>CCTV GROUP</p>
+  <div class="ftr-bot">
+    <span>© 2026 ООО «ЦЦТВ Плюс» · ИНН 7839120090</span>
+    <span>Член СРО с 2022 года</span>
+    <a href="#" data-legal="privacy" target="_blank">Политика конфиденциальности</a>
+    <a href="#" data-legal="consent" target="_blank">Согласие на обработку персональных данных</a>
+    <a class="credit" href="https://blickdesign.ru" target="_blank" rel="noopener"><span>Сайт разработан в</span><svg class="blick" viewBox="80 -735 4072 855" aria-hidden="true" focusable="false"><path fill="currentColor" d="M80 -308Q80 -483 146.5 -594.5Q213 -706 356 -735V-657Q254 -630 210.5 -542.0Q167 -454 167 -308Q167 -162 210.5 -73.5Q254 15 356 42V120Q213 91 146.5 -21.0Q80 -133 80 -308ZM525.0 -705H775.0Q870.0 -705 930.0 -690.0Q990.0 -675 1021.0 -637.5Q1052.0 -600 1052.0 -533Q1052.0 -459 1009.0 -424.0Q966.0 -389 903.0 -385V-357Q995.0 -354 1049.5 -316.5Q1104.0 -279 1104.0 -188Q1104.0 -83 1029.0 -41.5Q954.0 0 811.0 0H525.0ZM815.0 -90Q878.0 -90 916.5 -98.5Q955.0 -107 975.5 -132.5Q996.0 -158 996.0 -207Q996.0 -276 951.5 -300.5Q907.0 -325 815.0 -325H632.0V-90ZM782.0 -409Q838.0 -409 873.0 -416.5Q908.0 -424 927.5 -446.5Q947.0 -469 947.0 -513Q947.0 -561 928.0 -583.5Q909.0 -606 876.0 -612.0Q843.0 -618 782.0 -618H632.0V-409ZM1242.0 -68V-705H1349.0V-93H1700.0V0H1311.0Q1278.0 0 1260.0 -17.5Q1242.0 -35 1242.0 -68ZM2229.0 -705V-613H2071.0V-93H2229.0V0H1806.0V-93H1964.0V-613H1806.0V-705ZM2360.0 -353Q2360.0 -456 2401.0 -539.0Q2442.0 -622 2519.5 -669.0Q2597.0 -716 2701.0 -716Q2840.0 -716 2926.5 -640.5Q3013.0 -565 3029.0 -433H2921.0Q2909.0 -523 2852.0 -572.5Q2795.0 -622 2701.0 -622Q2590.0 -622 2529.5 -549.5Q2469.0 -477 2469.0 -353Q2469.0 -229 2529.5 -156.0Q2590.0 -83 2701.0 -83Q2795.0 -83 2852.0 -132.5Q2909.0 -182 2921.0 -273H3029.0Q3013.0 -140 2926.5 -64.5Q2840.0 11 2701.0 11Q2597.0 11 2519.5 -36.5Q2442.0 -84 2401.0 -166.5Q2360.0 -249 2360.0 -353ZM3170.0 -705H3277.0V-403H3326.0L3612.0 -705H3745.0L3422.0 -360L3748.0 0H3609.0L3323.0 -315H3277.0V0H3170.0ZM4152.0 -307Q4152.0 -132 4085.5 -20.5Q4019.0 91 3876.0 120V42Q3978.0 15 4021.5 -73.0Q4065.0 -161 4065.0 -307Q4065.0 -453 4021.5 -541.5Q3978.0 -630 3876.0 -657V-735Q4019.0 -706 4085.5 -594.0Q4152.0 -482 4152.0 -307Z"/></svg><span class="sr">BLICK</span></a>
+  </div>
+</footer>
+
+<!-- Полноэкранное меню -->
+<div class="menu" id="menu" hidden>
+  <div class="menu-inner grid">
+    <div class="c1-2 menu-dirs" data-menu-dirs></div>
+    <div class="c3-4 menu-main" data-menu-main></div>
+    <div class="c5 menu-contacts">
+      <span class="label">/ Связаться</span>
+      <a class="phone-big" data-phone></a>
+      <a data-email></a>
+      <span class="sm" data-address></span>
+      <button class="pill pill--cta" type="button" data-open="lead"><span>Оставить заявку</span><i class="pill-dot"><svg><use href="#i-arrow"/></svg></i></button>
+    </div>
+  </div>
+</div>
+
+<!-- Квиз и формы -->
+<div class="modal" id="modal" hidden>
+  <div class="modal-scrim" data-close></div>
+  <div class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="m-title">
+    <button class="circ circ--dark modal-x" type="button" data-close aria-label="Закрыть"><svg><use href="#i-plus"/></svg></button>
+    <div class="modal-body" id="m-body"></div>
+  </div>
+</div>
+
+<!-- Согласие на cookie -->
+<div class="cookie" id="cookie" role="dialog" aria-label="Использование cookie-файлов" hidden>
+  <button class="cookie-x" type="button" data-cookie="close" aria-label="Закрыть"><svg><use href="#i-plus"/></svg></button>
+  <p>Сайт использует cookie-файлы, чтобы сделать ваше пребывание на нём максимально удобным. Оставаясь на сайте, вы даёте своё <a href="#" data-legal="consent" target="_blank">согласие на обработку персональных данных</a> в порядке, указанном в <a href="#" data-legal="privacy" target="_blank">Политике обработки персональных данных</a>.</p>
+  <button class="pill pill--cta cookie-ok" type="button" data-cookie="ok"><span>Соглашаюсь</span><i class="pill-dot"><svg><use href="#i-arrow"/></svg></i></button>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
+<script src="js/data.js?v=39"></script>
+<script>window.CCTV.SGROUPS.find(group => group.k === 'finish').img = 'assets/img/svc-finish-dark.png';</script>
+<script src="js/hero-loop.js?v=1"></script>
+<script src="js/main.js?v=67"></script>
+<script src="js/process-variant-dark.js?v=1"></script>
+<script src="js/footer-lines-dark.js?v=1"></script>
+<script src="js/footer-fluid-dark.js?v=1"></script>
+</body>
+</html>

@@ -1,0 +1,146 @@
+/* Separate dark preview: loaded only by /site/dark.html. */
+:root[data-theme="dark"] {
+  --nf: 'CCTV Halvar', 'Inter Display', system-ui, sans-serif;
+  --fs-h2: calc(45 * var(--u));
+  color-scheme: dark;
+  --paper: #141414;
+  --mist: #1C1C1C;
+  --night: #111111;
+  --ink: #E6E6E3;
+  --ink-2: #C5C5C2;
+  --muted: #A4A4A1;
+  --line: rgba(230, 230, 227, .16);
+  --blue: #B49A79;
+  --blue-2: #B49A79;
+  --dark-outline: rgba(230, 230, 227, .35);
+}
+
+::selection { background: var(--blue); color: var(--paper); }
+
+.hero-title { font-weight: 500; font-size: calc(105 * var(--u)); }
+.hero-bg { z-index: 0; }
+.hero-brand, .hero-lead, .hero-line, .hero-pills { z-index: 1; }
+.hero-lead { width: calc(560 * var(--u)); font-size: calc(29 * var(--u)); line-height: 1; color: var(--blue); }
+.hero-lead > span { white-space: nowrap; }
+.hero-line, .hero-signature i, .hero-signature-edge { background: rgba(180, 154, 121, .5); }
+.hero-signature p { color: rgba(180, 154, 121, .5); text-transform: uppercase; text-align: center; }
+.hero-line--short { bottom: calc(26 * var(--u)); }
+.dcard-frame { border-color: rgba(180, 154, 121, .5); }
+.h2, .statement, .svc-title, .contact-title, .process-two-head .h2 { font-size: var(--fs-h2); line-height: 1; }
+.p2-title { font-size: calc(45 * var(--p2-unit)); line-height: 1; }
+.svc-word { font-size: calc(34 * var(--u)); line-height: 1; }
+.sec > .grid .label, .sec .sec-side .label, .sec .svc-index .label,
+.sec .contact-side .label, .dirs-head .label { font-size: max(16px, calc(20 * var(--u))); }
+.hero-title, .h2, .statement, .svc-title, .svc-word,
+.dirs-title, .prj-name, .step-t, .p2-title,
+.doc h3, .contact-title, .q-title, .done b { color: var(--blue); }
+.has-process-motion .p2-step:not(.is-current) .p2-title { color: var(--blue); }
+.dcard-name, .dpill { color: var(--ink); }
+.dcard-title { color: #fff; }
+.about-nums .num dd, .projects, .step-k, .contact-text { font-family: var(--nf); }
+.about-text .lead { color: var(--muted); }
+.contact .field, .contact .chips-field { font-family: var(--nf); }
+.contact .pill[type="submit"] > span { top: 0; }
+.projects .tags li { font-size: max(8px, calc(11 * var(--u) - 2px)); }
+.about-nums .num { gap: calc(18 * var(--u)); }
+.step:first-child .step-t { white-space: nowrap; }
+.menu-main { gap: 4px; }
+.menu-main a { line-height: 1.05; }
+.menu-dir + .menu-dir { margin-top: calc(22 * var(--u)); }
+.menu-dir ul { line-height: 1.2; }
+.hdr, .hdr.is-light, body.menu-open .hdr { color: var(--blue); }
+.ftr { background: var(--night); }
+.ftr-word { font-size: calc((100vw - var(--pad) - var(--pad)) / 7.8); letter-spacing: 0; }
+
+@media (min-width: 1024px) {
+  .hero-signature { grid-template-columns: minmax(0, 1fr) max-content minmax(0, 1fr); }
+  .hero-signature, .hero-signature-edge { top: calc(56.98 * var(--u) - 7px); }
+  .step:first-child .step-t { font-size: calc(19 * var(--u)); letter-spacing: -.01em; }
+  .p2-step:first-child .p2-title { white-space: nowrap; }
+  /* The numeral defines the top and bottom edges of each stage's text column. */
+  .p2-step { align-items: stretch; }
+  .p2-number { align-self: start; }
+  .p2-step > div {
+    min-height: 0; display: flex; flex-direction: column; justify-content: space-between;
+  }
+  .p2-k, .p2-title, .p2-description { position: static; }
+}
+/* The same 58px label row stays centered as the pill opens into a card. */
+.stage.is-stage .dcard-name {
+  top: 0; height: calc(58 * var(--u)); display: flex; align-items: center;
+  line-height: 1; text-box-trim: none;
+}
+
+@media (max-width: 1023px) {
+  .hero-signature { top: -61px; }
+  .hero-title { font-size: clamp(36px, 10.5vw, 105px); }
+  .hero-lead { font-size: clamp(20px, 4.4vw, 29px); line-height: 1; }
+  .h2, .statement, .svc-title, .contact-title, .process-two-head .h2 { font-size: 30px; line-height: 1; }
+  .svc-word { font-size: 26px; line-height: 1; }
+  .p2-title { font-size: 23px; line-height: 1.1; }
+}
+
+.p2-stage { background-color: var(--paper); }
+
+/* Chrome and overlays retain depth without white surfaces. */
+.hdr::before { background: rgba(20, 20, 20, .92); }
+.phone-panel, .modal-panel, .modal-x { background: var(--paper); }
+.phone-panel { border: 1px solid var(--line); box-shadow: 0 24px 70px rgba(0, 0, 0, .3); }
+.modal-scrim { background: rgba(10, 10, 10, .7); }
+.menu { background: var(--night); color: var(--muted); }
+.menu-main a, .menu-dir ul, .menu-contacts .sm { opacity: 1; }
+.menu .pill { color: var(--muted); }
+.menu .label { color: var(--blue); }
+
+/* Light outlines on graphite; dark lettering on the gold fill. */
+.pill, .hero .pill, .form .pill--cta, .form--light .pill--cta { --pill-line: var(--blue); }
+.pill--line, .pill--dark, .pill--line:hover, .pill--dark:hover, #about .pill--line:hover { --pill-line: var(--blue); }
+.circ, .circ--dark, .dpill, .chip, .form--dark .chip, .q-opt, .slot { border-color: var(--blue); }
+.pill-dot, .done .done-ic, .q-next, .skip { color: var(--night); }
+.svc-end-btn { color: var(--blue); }
+.pill:hover, .pill--line:hover, .pill--dark:hover, .form--light .pill--cta:hover,
+.circ:hover, .svc-end-btn:hover, .svc-end-btn:focus-visible { color: var(--night); }
+.menu-contacts .pill-dot, .menu-contacts .pill:hover .pill-dot,
+.menu-contacts .pill::before { background: var(--blue); color: var(--night); }
+.menu-contacts .pill:hover { color: var(--night); }
+
+.step-num { color: #444444; }
+.step.is-on .step-num { color: var(--blue); }
+.step-dot { border-color: var(--dark-outline); }
+.p2-photo { box-shadow: 0 18px 45px rgba(0, 0, 0, .3); }
+.doc { border-top-color: var(--line); }
+
+/* Blend the whole marquee: the transformed track isolates individual images. */
+.marquee { mix-blend-mode: screen; border-color: rgba(230, 230, 227, .08); }
+.logo-cell { border-color: rgba(230, 230, 227, .08); }
+.logo-cell img, .logo-cell:hover img {
+  filter: grayscale(1) invert(1);
+  mix-blend-mode: normal;
+}
+.logo-cell img { opacity: .7; }
+.logo-cell:hover img { opacity: 1; }
+
+/* Forms, including the last quiz step and native controls. */
+.field:not(.is-bad) input, .field textarea, .field select { border-bottom-color: var(--dark-outline); }
+.field input:focus, .field textarea:focus, .field select:focus { border-bottom-color: var(--blue); }
+.field input::placeholder, .field textarea::placeholder { color: var(--muted); }
+.field select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5l5 5 5-5' fill='none' stroke='%23E6E6E3' stroke-width='1.2'/%3E%3C/svg%3E");
+}
+.field select option { background: var(--paper); color: var(--ink); }
+.field input[type="file"]::file-selector-button { background: var(--mist); border-color: var(--dark-outline); }
+.chip { border-color: var(--dark-outline); }
+.chip[aria-pressed="true"], .q-opt[aria-pressed="true"], .slot[aria-pressed="true"] { color: var(--night); }
+.q-opt[aria-pressed="true"] small, .slot[aria-pressed="true"] small { color: var(--night); }
+.q-opt[aria-pressed="true"] svg { color: var(--night); }
+.chip[data-chip].home[aria-pressed="true"], .chip[data-chip].telecom[aria-pressed="true"] { color: #fff; }
+.check input:checked + i::after { border-color: var(--night); }
+.cookie { background: rgba(17, 17, 17, .96); border: 1px solid var(--line); }
+
+/* Match the contact/footer fade to the neutral charcoal base. */
+.contact-bg i {
+  background: linear-gradient(180deg, var(--night) 0%, rgba(17, 17, 17, .55) 40%, rgba(17, 17, 17, .85) 100%);
+}
+.ftr::before {
+  background: linear-gradient(to bottom, var(--night) 0%, rgba(17, 17, 17, .8) 32%, rgba(17, 17, 17, 0) 100%);
+}
