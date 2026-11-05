@@ -42,6 +42,14 @@
 .contact .field, .contact .chips-field { font-family: var(--nf); }
 .contact .pill[type="submit"] > span { top: 0; }
 .projects .tags li { font-size: max(8px, calc(11 * var(--u) - 2px)); }
+.projects { padding-bottom: calc(80 * var(--u)); }
+.projects-wordmark { overflow: hidden; background: var(--paper); }
+.projects-wordmark p {
+  position: relative; left: 50%; width: max-content; transform: translateX(-50%);
+  font-family: var(--nf); font-weight: 400; font-size: calc(100vw * 205 / 1440);
+  line-height: 1; letter-spacing: 0; white-space: nowrap; color: #171717;
+}
+.projects-wordmark + .steps { padding-top: calc(120 * var(--u)); }
 .about-nums .num { gap: calc(18 * var(--u)); }
 .step:first-child .step-t { white-space: nowrap; }
 .menu-main { gap: 4px; }
