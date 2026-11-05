@@ -138,12 +138,13 @@
   let stageST = null;      // ScrollTrigger сцены (десктоп)
   let svcST = null;        // ScrollTrigger ленты услуг (десктоп)
   let svcDist = () => 0;
+  const motion = { ease: 'power3.out', enter: .68, heading: 1.1, detail: .48, stagger: .055 };
 
   // разбивка заголовков на слова
   // <br> сохраняем; слова, связанные неразрывным пробелом (предлог + слово), остаются вместе
   $$('[data-split]').forEach(el => {
     const lines = el.innerHTML.split(/<br\s*\/?>/i).map(l => { const t = document.createElement('div'); t.innerHTML = l; return t.textContent.trim(); });
-    el.innerHTML = lines.map(l => l.split(/[ \t\n]+/).filter(Boolean).map(w => `<span class="w"><span>${w}</span></span>`).join(' ')).join('<br>');
+    el.innerHTML = lines.map(l => l.split(/[ \t\n]+/).filter(Boolean).map(w => `<span class="w"><span>${w}</span></span>`).join(' ')).join('<br> ');
   });
 
   if (hasGsap) {
@@ -169,6 +170,14 @@
       mm.add('(max-width: 1023px)', () => {
         intro.from('.dpill', { opacity: 0, y: 30, duration: 1, stagger: 0.06, clearProps: 'opacity,transform' }, 0.85);
       });
+      intro.addLabel('signature', intro.duration())
+        .fromTo('.hero-signature p', { y: 6, opacity: 0 }, {
+          y: 0, opacity: 1, duration: 1.15, force3D: false, clearProps: 'transform,opacity',
+        }, 'signature')
+        .fromTo('.hero-signature i, .hero-signature-edge', { scaleX: 0, opacity: 0 }, {
+          scaleX: 1, opacity: 1, duration: 1.25, stagger: .04, ease: 'power3.inOut',
+          force3D: false, clearProps: 'transform,opacity',
+        }, 'signature');
     }
 
     /* ---- десктоп: сцена и горизонтальная лента ---- */
@@ -244,38 +253,43 @@
         },
       });
       panels.forEach((p, i) => {
-        // Words descend squarely into place, like courses of brickwork.
+        // One entrance per card; scrolling back must not repeatedly hide readable text.
         const entry = gsap.timeline({
-          defaults: { ease: 'power2.out' },
+          defaults: { ease: motion.ease, force3D: false },
           scrollTrigger: i === 0
-            ? { trigger: pin, start: 'top 85%', end: 'top 20%', scrub: true }
-            : { trigger: p, containerAnimation: hz, start: 'left 98%', end: 'left 28%', scrub: true },
+            ? { trigger: p, start: 'top 96%', once: true }
+            : { trigger: p, containerAnimation: hz, start: 'left 90%', once: true },
         });
         entry.fromTo($('.svc-photo', p), {
-          clipPath: 'inset(7% 5% 7% 5%)', y: 24, rotationY: 12, rotationZ: -3, scale: 0.88,
-          transformOrigin: 'center center',
+          x: 32, scale: .97, opacity: 0,
         }, {
-          clipPath: 'inset(0% 0% 0% 0%)', y: 0, rotationY: 0, rotationZ: 0, scale: 1, duration: 1,
+          x: 0, scale: 1, opacity: 1, duration: motion.enter, clearProps: 'transform,opacity',
         }, 0);
-        const textEntry = gsap.timeline({
-          defaults: { ease: 'power2.out' },
-          scrollTrigger: i === 0
-            ? { trigger: pin, start: 'top 85%', end: 'top 20%', scrub: true }
-            : { trigger: $('.svc-body', p), containerAnimation: hz, start: 'left 98%', end: 'left 55%', scrub: true },
-        });
+        const textEntry = gsap.timeline({ paused: true, defaults: { ease: 'power2.out', force3D: false } });
         textEntry.fromTo($$('.svc-title-word', p), {
-            yPercent: -120, opacity: 0,
+            yPercent: -35, opacity: 0,
           }, {
-            yPercent: 0, opacity: 1,
-            stagger: { each: 0.18, from: 'end' }, duration: 0.8, ease: 'power2.inOut',
+            yPercent: 0, opacity: 1, stagger: { amount: .16 },
+            duration: motion.heading, clearProps: 'transform,opacity,visibility',
           }, 0)
           .fromTo($$('.svc-meta, .svc-desc, .acc-item', p), {
-            y: -14, opacity: 0,
+            y: 10, opacity: 0,
           }, {
-            y: 0, opacity: 1, stagger: 0.065, duration: 0.65,
-          }, 0.18);
-        gsap.fromTo($('.svc-photo img', p), { xPercent: -7, scale: 1.18 }, {
-          xPercent: 7, scale: 1.18, ease: 'none',
+            y: 0, opacity: 1, stagger: { amount: .18 },
+            duration: .6, clearProps: 'transform,opacity,visibility',
+          }, .26);
+        let textInView = false;
+        const revealText = () => { if (textInView && entry.progress() >= 1) textEntry.play(); };
+        entry.eventCallback('onComplete', revealText);
+        ScrollTrigger.create({
+          ...(i === 0
+            ? { trigger: p, start: () => `top bottom-=${$('.svc-photo', p).offsetHeight + 16}` }
+            : { trigger: $('.svc-body', p), containerAnimation: hz, start: 'left 94%' }),
+          once: true,
+          onEnter: () => { textInView = true; revealText(); },
+        });
+        gsap.fromTo($('.svc-photo img', p), { xPercent: -4, scale: 1.1 }, {
+          xPercent: 4, scale: 1.1, ease: 'none',
           scrollTrigger: { trigger: p, containerAnimation: hz, start: 'left right', end: 'right left', scrub: true },
         });
       });
@@ -290,51 +304,70 @@
     });
 
     /* ---- общие анимации при скролле ---- */
-    if (!reduce) {
+    mm.add('(prefers-reduced-motion: no-preference)', () => {
       // заголовки по словам
       $$('[data-split]').forEach(el => {
-        gsap.from($$('.w > span', el), {
-          yPercent: 110, duration: 1.2, ease: 'expo.out', stagger: 0.035,
-          scrollTrigger: { trigger: el, start: 'top 88%' },
+        const words = $$('.w > span', el);
+        gsap.fromTo(words, { yPercent: 55, opacity: 0 }, {
+          yPercent: 0, opacity: 1, duration: motion.heading, ease: 'power2.out',
+          stagger: { amount: Math.min(.32, (words.length - 1) * .045) }, force3D: false,
+          clearProps: 'transform,opacity,visibility',
+          scrollTrigger: { trigger: el, start: 'top 86%', once: true },
         });
       });
       // фото с параллаксом
-      mm.add('(prefers-reduced-motion: no-preference)', () => {
-        const photos = $$('.about-img');
-        photos.forEach(photo => {
-          photo.classList.add('has-about-parallax');
-          // Отдельное CSS-свойство не конфликтует с раскрытием фотографии.
-          gsap.fromTo(photo, { '--about-drift': () => `${-photo.offsetHeight * .12}px` }, {
-            '--about-drift': () => `${photo.offsetHeight * .12}px`, ease: 'none',
-            scrollTrigger: { trigger: photo, start: 'top bottom', end: 'bottom top', scrub: .6, invalidateOnRefresh: true },
-          });
+      const aboutPhotos = $$('.about-img');
+      aboutPhotos.forEach(photo => {
+        photo.classList.add('has-about-parallax');
+        // Отдельное CSS-свойство не конфликтует с раскрытием фотографии.
+        gsap.fromTo(photo, { '--about-drift': () => `${-photo.offsetHeight * .12}px` }, {
+          '--about-drift': () => `${photo.offsetHeight * .12}px`, ease: 'none',
+          scrollTrigger: { trigger: photo, start: 'top bottom', end: 'bottom top', scrub: .6, invalidateOnRefresh: true },
         });
-        return () => photos.forEach(photo => photo.classList.remove('has-about-parallax'));
       });
       $$('[data-parallax] img').forEach(img => {
         gsap.fromTo(img, { yPercent: -7 }, { yPercent: 7, ease: 'none', scrollTrigger: { trigger: img.parentElement, start: 'top bottom', end: 'bottom top', scrub: true } });
       });
       gsap.fromTo('.contact-bg img', { yPercent: -6 }, { yPercent: 6, ease: 'none', scrollTrigger: { trigger: '.contact', start: 'top bottom', end: 'bottom top', scrub: true } });
-      // проекты: фото раскрывается из маски
-      $$('.prj').forEach((p, i) => {
+      // Фото и подпись входят одной короткой последовательностью.
+      $$('.prj').forEach(p => {
         const img = $('.prj-img', p);
-        gsap.timeline({ scrollTrigger: { trigger: p, start: 'top 88%' } })
-          .from(img, { clipPath: 'inset(100% 0% 0% 0%)', duration: 1.4, ease: 'expo.inOut' })
-          .from($('img', img), { scale: 1.3, duration: 1.8, ease: 'expo.out' }, 0.2)
-          .from([...$$('.prj-meta, .prj-name, .tags', p)], { opacity: 0, y: 20, duration: 0.9, stagger: 0.06, ease: 'expo.out' }, 0.6);
-      });
-      // услуги на телефоне: фото из маски
-      mm.add('(max-width: 1023px)', () => {
-        $$('.svc-photo').forEach(f => gsap.from(f, { clipPath: 'inset(0% 100% 0% 0%)', duration: 1.3, ease: 'expo.inOut', scrollTrigger: { trigger: f, start: 'top 85%' } }));
+        gsap.timeline({ defaults: { ease: motion.ease, force3D: false }, scrollTrigger: { trigger: p, start: 'top 90%', once: true } })
+          .fromTo(img, { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: motion.enter, clearProps: 'transform,opacity' })
+          .fromTo($$('.prj-meta, .prj-name, .tags', p), { opacity: 0, y: 12 }, {
+            opacity: 1, y: 0, duration: .85, stagger: motion.stagger, clearProps: 'transform,opacity',
+          }, .16);
       });
       // счётчики
       $$('[data-count]').forEach(b => {
         const end = +b.dataset.count, o = { v: 0 };
-        gsap.to(o, { v: end, duration: 1.8, ease: 'power3.out', scrollTrigger: { trigger: b, start: 'top 90%' }, onUpdate: () => { b.textContent = Math.round(o.v); } });
+        gsap.to(o, { v: end, duration: 1.15, ease: motion.ease, scrollTrigger: { trigger: b, start: 'top 90%', once: true }, onUpdate: () => { b.textContent = Math.round(o.v); } });
       });
       // подвал: большое слово
-      gsap.from('.ftr-word', { yPercent: 60, opacity: 0, duration: 1.4, ease: 'expo.out', scrollTrigger: { trigger: '.ftr-word', start: 'top 98%' } });
-    }
+      gsap.fromTo('.ftr-word', { yPercent: 12, opacity: 0 }, {
+        yPercent: 0, opacity: 1, duration: .85, ease: motion.ease, force3D: false,
+        clearProps: 'transform,opacity,visibility', scrollTrigger: { trigger: '.ftr-word', start: 'top 96%', once: true },
+      });
+      [[$$('.ftr-cols > div'), '.ftr-cols'], [$$('#contacts .form > *'), '#contacts .form']].forEach(([items, trigger]) => {
+        gsap.fromTo(items, { opacity: 0, y: 14 }, {
+          opacity: 1, y: 0, duration: motion.enter, stagger: { amount: .18 }, ease: motion.ease,
+          force3D: false, clearProps: 'transform,opacity,visibility',
+          scrollTrigger: { trigger, start: 'top 90%', once: true },
+        });
+      });
+      $$('.step-body').forEach((body, i) => gsap.fromTo(body, { opacity: 0, y: 14 }, {
+        opacity: 1, y: 0, duration: .9, delay: i * .04, ease: motion.ease,
+        force3D: false, clearProps: 'transform,opacity,visibility',
+        scrollTrigger: { trigger: body, start: 'top 92%', once: true },
+      }));
+      return () => aboutPhotos.forEach(photo => photo.classList.remove('has-about-parallax'));
+    });
+    mm.add('(max-width: 1023px) and (prefers-reduced-motion: no-preference)', () => {
+      $$('.svc-photo').forEach(f => gsap.fromTo(f, { opacity: 0, y: 16 }, {
+        opacity: 1, y: 0, duration: motion.enter, ease: motion.ease, force3D: false,
+        clearProps: 'transform,opacity,visibility', scrollTrigger: { trigger: f, start: 'top 90%', once: true },
+      }));
+    });
 
     /* ---- шкала шагов ---- */
     const steps = $$('.step');
@@ -386,6 +419,7 @@
   } else {
     $$('.step').forEach(s => s.classList.add('is-on'));
   }
+  document.documentElement.classList.remove('hero-loading');
 
   /* О группе: отдельный наблюдатель, без clip-path и скрытия фотографии в Safari. */
   if (!reduce && 'IntersectionObserver' in window) {
@@ -441,7 +475,7 @@
     }), { rootMargin: '0px 0px -10% 0px' });
     $$('[data-reveal]').forEach(el => {
       const sib = [...el.parentElement.children].filter(x => x.hasAttribute('data-reveal'));
-      el.style.setProperty('--rd', `${Math.max(0, sib.indexOf(el)) * 90}ms`);
+      el.style.setProperty('--rd', `${Math.min(180, Math.max(0, sib.indexOf(el)) * 55)}ms`);
       io.observe(el);
     });
   }
@@ -501,6 +535,21 @@
     e.preventDefault();
     if (document.body.classList.contains('menu-open')) closeMenu(false);
     scrollTo(y);
+  });
+
+  // Заливка круглой кнопки начинается в точке входа курсора.
+  $$('.svc-end-btn').forEach(button => {
+    const placeFill = e => {
+      const rect = button.getBoundingClientRect();
+      const x = Math.max(0, Math.min(rect.width, e.clientX - rect.left));
+      const y = Math.max(0, Math.min(rect.height, e.clientY - rect.top));
+      const diameter = Math.ceil(2 * Math.hypot(Math.max(x, rect.width - x), Math.max(y, rect.height - y))) + 2;
+      button.style.setProperty('--fill-x', `${x}px`);
+      button.style.setProperty('--fill-y', `${y}px`);
+      button.style.setProperty('--fill-size', `${diameter}px`);
+    };
+    button.addEventListener('pointerenter', placeFill);
+    button.addEventListener('pointerleave', placeFill);
   });
 
   // оглавление услуг: прыжок к нужной группе в ленте
@@ -641,17 +690,26 @@
   /* ================= Окно: квиз, запись, звонок ================= */
 
   const modal = $('#modal'), mBody = $('#m-body');
-  let opener = null, qz = null, bk = null;
+  let opener = null, qz = null, bk = null, modalCloseTimer;
+  const revealModalContent = () => {
+    if (reduce || !hasGsap) return;
+    gsap.fromTo(mBody, { opacity: 0, y: 8 }, {
+      opacity: 1, y: 0, duration: .32, ease: motion.ease, force3D: false,
+      overwrite: true, clearProps: 'transform,opacity,visibility',
+    });
+  };
   function openModal(html) {
+    clearTimeout(modalCloseTimer);
     opener = document.activeElement;
     mBody.innerHTML = html;
     modal.hidden = false; requestAnimationFrame(() => modal.classList.add('is-open'));
+    revealModalContent();
     lock(true); setPhone(false);
     setTimeout(() => { const f = $('button:not(.modal-x), input', mBody); f && f.focus(); }, 60);
   }
   function closeModal() {
     modal.classList.remove('is-open');
-    setTimeout(() => { modal.hidden = true; mBody.innerHTML = ''; }, 500);
+    modalCloseTimer = setTimeout(() => { modal.hidden = true; mBody.innerHTML = ''; }, reduce ? 0 : 320);
     if (!document.body.classList.contains('menu-open')) lock(false);
     opener && opener.focus && opener.focus();
   }
@@ -712,6 +770,7 @@
     }
     mBody.innerHTML = html;
     const f = $('.q-opt, .slot, input', mBody); f && f.focus({ preventScroll: true });
+    revealModalContent();
   }
   function startLead(dir) {
     qz = { k: dir ? (dir === 'home' ? 'homechoice' : dir) : 'lead', step: 0, a: {}, lead: true };

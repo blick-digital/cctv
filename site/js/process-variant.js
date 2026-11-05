@@ -15,12 +15,14 @@
     const pictures = [...photos.children];
     const state = { p: 0 };
     let current = -1;
+    let unit = 1;
+    const measure = () => { unit = section.querySelector('.process-two-dial').getBoundingClientRect().width / 340; };
     const render = () => {
       const p = state.p;
-      const unit = section.querySelector('.process-two-dial').offsetWidth / 340;
       const active = Math.min(steps.length - 1, Math.round(p));
       const base = Math.min(steps.length - 1, Math.floor(p));
       const fraction = p - base;
+      const deal = fraction * fraction * (3 - 2 * fraction);
       rows.forEach((row, i) => {
         const d = i - p;
         row.style.transform = `translateY(${d * 187 * unit}px)`;
@@ -32,9 +34,9 @@
         card.style.visibility = depth >= 0 && depth <= 2 ? 'visible' : 'hidden';
         card.style.zIndex = String(20 - depth);
         if (depth === 0) {
-          card.style.transform = `translate(${-fraction * 480 * unit}px, ${fraction * 70 * unit}px) rotate(${-3 - fraction * 24}deg)`;
+          card.style.transform = `translate(${-deal * 480 * unit}px, ${deal * 70 * unit}px) rotate(${-3 - deal * 18}deg)`;
         } else {
-          const lift = Math.max(0, depth - fraction);
+          const lift = Math.max(0, depth - deal);
           card.style.transform = `translate(${lift * 16 * unit}px, ${lift * 10 * unit}px) rotate(${-3 + lift * 7}deg) scale(${1 - lift * .035})`;
         }
       });
@@ -46,10 +48,12 @@
         });
       }
     };
+    measure();
     // Нативный sticky вместо GSAP pin/spacer: высота раздела постоянна.
     gsap.to(state, { p: steps.length - 1, ease: 'none', onUpdate: render, scrollTrigger: {
       trigger: section, start: 'top top', end: 'bottom bottom', scrub: .45,
       invalidateOnRefresh: true,
+      onRefresh: () => { measure(); render(); },
     }});
     render();
     const refresh = requestAnimationFrame(() => ScrollTrigger.refresh());

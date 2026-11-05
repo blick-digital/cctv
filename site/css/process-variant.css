@@ -8,7 +8,7 @@
 .p2-photo:first-child { opacity: 1; }
 .process-two-list { margin: calc(45 * var(--u)) var(--pad) 0 calc(580 * var(--u)); }
 .p2-step { display: grid; grid-template-columns: calc(178 * var(--u)) minmax(0, 1fr); align-items: start; padding-bottom: calc(75 * var(--p2-unit)); }
-.p2-number { font: 400 calc(120 * var(--p2-unit))/1 var(--nf); letter-spacing: -.03em; color: #0e37a5; }
+.p2-number { font: 400 calc(120 * var(--p2-unit))/1 var(--nf); letter-spacing: -.03em; color: var(--blue); }
 .p2-step > div { position: relative; min-height: calc(112 * var(--p2-unit)); }
 .p2-k, .p2-title, .p2-description, .p2-number { text-box-trim: trim-both; text-box-edge: cap alphabetic; }
 .p2-k { position: absolute; top: 0; left: 0; display: block; font: 400 calc(16 * var(--p2-unit))/1.45 var(--nf); letter-spacing: calc(2.5 * var(--p2-unit)); color: var(--muted); text-transform: uppercase; }
