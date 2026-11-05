@@ -53,6 +53,7 @@
 .ftr-word { font-size: calc((100vw - var(--pad) - var(--pad)) / 7.8); letter-spacing: 0; }
 
 @media (min-width: 1024px) {
+  .about-nums .num b { font-size: 100px; }
   .hero-signature { grid-template-columns: minmax(0, 1fr) max-content minmax(0, 1fr); }
   .hero-signature, .hero-signature-edge { top: calc(56.98 * var(--u) - 7px); }
   .step:first-child .step-t { font-size: calc(19 * var(--u)); letter-spacing: -.01em; }
