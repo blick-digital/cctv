@@ -190,10 +190,6 @@ body.menu-open .hdr .logo-svg path[fill="#B49A79"] { fill: #fff; }
   font-family: var(--nf); font-size: calc(30 * var(--u)); line-height: .93; text-transform: uppercase;
   display: grid;
 }
-.hero-hint {
-  position: absolute; left: calc(580 * var(--u)); bottom: calc(131 * var(--u));
-  font-size: max(11px, calc(14 * var(--u))); line-height: 1.2; text-transform: uppercase; letter-spacing: .01em;
-}
 .hero-line { position: absolute; height: 1px; background: rgba(255, 255, 255, .7); }
 .hero-line--long { left: calc(361 * var(--u)); right: 0; bottom: calc(106 * var(--u)); transform-origin: right; }
 .hero-line--short { left: 0; width: calc(70 * var(--u)); bottom: calc(21 * var(--u)); transform-origin: left; }
@@ -267,18 +263,26 @@ body.menu-open .hdr .logo-svg path[fill="#B49A79"] { fill: #fff; }
 /* ---------- О нас ---------- */
 .about { padding-bottom: calc(212.7 * var(--u)); }
 .about-body {
+  position: relative;
   margin-top: calc(120 * var(--u)); align-items: start;
   grid-template-rows: repeat(2, calc(221 * var(--u))) auto;
 }
-.about-img { position: relative; overflow: hidden; height: calc(221 * var(--u)); }
+.about-accent {
+  position: absolute; z-index: 0; pointer-events: none;
+  width: 30px; height: 30px; background: var(--blue);
+  left: calc(580 * var(--u) - 15px); top: calc(221 * var(--u) - 15px);
+}
+.about-img { position: relative; z-index: 1; overflow: hidden; height: calc(221 * var(--u)); }
 .about-img img { position: absolute; max-width: none; height: auto; }
-.about-img::after {
+.about-img.has-about-parallax img { translate: 0 var(--about-drift, 0px); scale: 1.3; }
+.about-img::after, .about-accent::after {
   content: ''; position: absolute; inset: 0; background: var(--paper);
   transform: scaleX(0); transform-origin: right center; pointer-events: none;
 }
-.about-img.is-pending::after { transform: scaleX(1); }
-.about-img.is-in::after { animation: about-photo-uncover 1.35s var(--ease-io) both; }
-.about-img.is-in img { animation: about-photo-settle 1.5s var(--ease) both; }
+.about-img.is-pending::after, .about-accent.is-pending::after { transform: scaleX(1); }
+.about-img.is-in::after { animation: about-photo-uncover .65s var(--ease-io) both; }
+.about-accent.is-in::after { animation: about-photo-uncover .3s var(--ease-io) both; }
+.about-img.is-in img { animation: about-photo-settle .75s var(--ease) both; }
 @keyframes about-photo-uncover { from { transform: scaleX(1); } to { transform: scaleX(0); } }
 @keyframes about-photo-settle { from { transform: translateX(-32px); } to { transform: translateX(0); } }
 /* Кадрирование фотографий повторяет два окна в макете Figma. */
@@ -301,8 +305,8 @@ body.menu-open .hdr .logo-svg path[fill="#B49A79"] { fill: #fff; }
 .about-copy-line:nth-child(4) { --copy-delay: .3s; }
 @keyframes about-copy-enter { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
 @media (prefers-reduced-motion: reduce) {
-  .about-img.is-pending::after { transform: scaleX(0); }
-  .about-img.is-in::after, .about-img.is-in img, [data-about-copy].is-in .about-copy-line { animation: none; }
+  .about-img.is-pending::after, .about-accent.is-pending::after { transform: scaleX(0); }
+  .about-img.is-in::after, .about-accent.is-in::after, .about-img.is-in img, [data-about-copy].is-in .about-copy-line { animation: none; }
   [data-about-copy].is-pending .about-copy-line { opacity: 1; transform: none; }
 }
 .about-text .pill { width: calc(273 * var(--u)); }
@@ -610,7 +614,6 @@ html.anim [data-reveal].is-in { opacity: 1; transform: none; transition: opacity
   .hero-title { font-size: clamp(48px, 11.6vw, 110px); }
   .hero-row { display: flex; flex-direction: column-reverse; gap: 22px; margin-top: 18px; }
   .hero-sub { margin: 0; font-size: clamp(20px, 4.4vw, 30px); }
-  .hero-hint { left: var(--pad); bottom: 268px; font-size: 12px; }
   .hero-line--long { left: var(--pad); bottom: 252px; }
   .hero-line--short { display: none; }
   .hero-lead { display: none; }
@@ -638,6 +641,7 @@ html.anim [data-reveal].is-in { opacity: 1; transform: none; transition: opacity
   .grid > [class*="c"] { grid-column: 1 / -1; }
   .statement { font-size: 30px; }
   .about-body { margin-top: 48px; row-gap: 32px; grid-template-rows: none; }
+  .about-accent { display: none; }
   .about-img { height: auto; aspect-ratio: 2.534 / 1; }
   .about-body > *, .nums.about-nums { grid-column: 1 / -1; grid-row: auto; }
   .about-img--building { aspect-ratio: 3.8 / 1; }
@@ -729,7 +733,6 @@ html.anim [data-reveal].is-in { opacity: 1; transform: none; transition: opacity
   .statement { font-size: 26px; }
   .contact-title { font-size: 38px; }
   .hero-brand { bottom: 312px; }
-  .hero-hint { bottom: 252px; }
   .hero-line--long { bottom: 236px; }
   .hero-pills { grid-template-columns: 1fr 1fr; }
   .dirs-cards { grid-template-columns: 1fr; }

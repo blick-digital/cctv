@@ -160,7 +160,6 @@
         .from('.hero-line--long', { scaleX: 0, duration: 1.6, ease: 'power3.inOut' }, 0.4)
         .from('.hero-line--short', { scaleX: 0, duration: 1.2, ease: 'power3.inOut' }, 0.8)
         .from('.hero-lead > span', { yPercent: 70, opacity: 0, duration: 1.1, stagger: 0.08 }, 0.7)
-        .from('.hero-hint', { opacity: 0, y: 14, duration: 1 }, 0.9)
         .from('.hdr .logo, .hdr .nav a, .hdr .circ', { opacity: 0, y: -14, duration: 1, stagger: 0.04 }, 0.3);
       // пилюли: в режиме сцены это карточки, иначе отдельные ссылки
       intro.add(() => {}, 0);
@@ -192,7 +191,7 @@
       stageST = tl.scrollTrigger;
 
       // 1. тексты первого экрана уходят вверх
-      tl.to(['.hero-brand', '.hero-hint', '.hero-lead'], { y: () => -90 * U(), opacity: 0, duration: 0.32, stagger: 0.02, ease: 'power2.in' }, 0)
+      tl.to(['.hero-brand', '.hero-lead'], { y: () => -90 * U(), opacity: 0, duration: 0.32, stagger: 0.02, ease: 'power2.in' }, 0)
         .fromTo(['.hero-line--long', '.hero-line--short'], { opacity: 1 }, { opacity: 0, duration: 0.25, ease: 'power2.in', immediateRender: false }, 0)
 
 
@@ -286,7 +285,7 @@
         track.style.height = ''; ScrollTrigger.removeEventListener('refreshInit', fixTrackH);
         stageST = null; svcST = null;
         gsap.set(cards, { clearProps: 'all' });
-        gsap.set([...$$('.dcard-bg, .dcard-frame, .dcard-num, .dcard-body > *, .dirs-head > *'), '.hero-bg', '.hero-bg img, .hero-bg video', '.hero-brand', '.hero-hint', '.hero-lead', '.hero-line'], { clearProps: 'all' });
+        gsap.set([...$$('.dcard-bg, .dcard-frame, .dcard-num, .dcard-body > *, .dirs-head > *'), '.hero-bg', '.hero-bg img, .hero-bg video', '.hero-brand', '.hero-lead', '.hero-line'], { clearProps: 'all' });
       };
     });
 
@@ -300,6 +299,18 @@
         });
       });
       // фото с параллаксом
+      mm.add('(prefers-reduced-motion: no-preference)', () => {
+        const photos = $$('.about-img');
+        photos.forEach(photo => {
+          photo.classList.add('has-about-parallax');
+          // Отдельное CSS-свойство не конфликтует с раскрытием фотографии.
+          gsap.fromTo(photo, { '--about-drift': () => `${-photo.offsetHeight * .12}px` }, {
+            '--about-drift': () => `${photo.offsetHeight * .12}px`, ease: 'none',
+            scrollTrigger: { trigger: photo, start: 'top bottom', end: 'bottom top', scrub: .6, invalidateOnRefresh: true },
+          });
+        });
+        return () => photos.forEach(photo => photo.classList.remove('has-about-parallax'));
+      });
       $$('[data-parallax] img').forEach(img => {
         gsap.fromTo(img, { yPercent: -7 }, { yPercent: 7, ease: 'none', scrollTrigger: { trigger: img.parentElement, start: 'top bottom', end: 'bottom top', scrub: true } });
       });
@@ -378,14 +389,43 @@
 
   /* О группе: отдельный наблюдатель, без clip-path и скрытия фотографии в Safari. */
   if (!reduce && 'IntersectionObserver' in window) {
-    const aboutItems = $$('.about-img, [data-about-copy]');
+    const aboutItems = $$('.about-img, .about-accent, [data-about-copy]');
+    const firstPhoto = $('.about-img--engineering');
+    const accent = $('.about-accent');
+    const secondPhoto = $('.about-img--building');
+    const seen = new Set();
+    let firstDone = false, secondDone = false;
+    const reveal = el => {
+      el.classList.remove('is-pending');
+      el.classList.add('is-in');
+      aboutObserver.unobserve(el);
+    };
+    const advance = () => {
+      if (seen.has(firstPhoto)) reveal(firstPhoto);
+      // Restoring a scroll position below the first photo must not block the sequence.
+      else if (firstPhoto.getBoundingClientRect().bottom <= 0) { firstDone = true; reveal(firstPhoto); }
+      if (!firstDone) return;
+      if (seen.has(secondPhoto)) reveal(secondPhoto);
+      else if (secondPhoto.getBoundingClientRect().bottom <= 0) { secondDone = true; reveal(secondPhoto); }
+      if (!secondDone) return;
+      if (seen.has(accent)) reveal(accent);
+      else if (accent.getBoundingClientRect().bottom <= 0) reveal(accent);
+    };
+    firstPhoto.addEventListener('animationend', e => {
+      if (e.animationName !== 'about-photo-settle') return;
+      firstDone = true; advance();
+    });
+    secondPhoto.addEventListener('animationend', e => {
+      if (e.animationName !== 'about-photo-settle') return;
+      secondDone = true; advance();
+    });
     const aboutObserver = new IntersectionObserver(entries => {
       entries.forEach(entry => {
         if (!entry.isIntersecting) return;
-        entry.target.classList.remove('is-pending');
-        entry.target.classList.add('is-in');
-        aboutObserver.unobserve(entry.target);
+        seen.add(entry.target);
+        if (entry.target.hasAttribute('data-about-copy')) reveal(entry.target);
       });
+      advance();
     }, { rootMargin: '0px 0px -10% 0px' });
     aboutItems.forEach(el => {
       el.classList.add('is-pending');
