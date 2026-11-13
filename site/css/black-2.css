@@ -25,22 +25,22 @@
   border-color: var(--b2-light-line);
 }
 .dcard-frame, .dcard-subs li, .dcard-go { border-color: var(--b2-light-line); }
-.dcard.contract, .contact .chip.contract {
+.contract {
   --direction-stripe: #738492;
   --direction-tint: #8795a3;
   --direction-bottom: #515f6a;
 }
-.dcard.business, .contact .chip.business {
+.business {
   --direction-stripe: #01654f;
   --direction-tint: #305c56;
   --direction-bottom: #011914;
 }
-.dcard.home, .contact .chip.home {
+.home {
   --direction-stripe: #ab8b6a;
   --direction-tint: #ccbdab;
   --direction-bottom: #ab8b6a;
 }
-.dcard.telecom, .contact .chip.telecom {
+.telecom {
   --direction-stripe: #1f5790;
   --direction-tint: #5782a1;
   --direction-bottom: #123963;
@@ -59,13 +59,10 @@
 .stage.is-stage .dcard-frame {
   transition: background-color .4s var(--ease), border-color .4s var(--ease);
 }
-.stage.is-stage .dcard:is(:hover, :focus-visible) .dcard-frame {
-  background-color: var(--c);
-  border-color: var(--c);
-}
-.hero-pills .dpill:focus-visible {
-  background-color: var(--c);
-  border-color: var(--c);
+.stage.is-stage .dcard:is(:hover, :focus-visible) .dcard-frame,
+.hero-pills .dpill:is(:hover, :focus-visible) {
+  background-color: var(--direction-stripe);
+  border-color: var(--direction-stripe);
 }
 .dcard-bg img, .dcard:hover .dcard-bg img {
   transform: scale(var(--direction-zoom, 1.09));

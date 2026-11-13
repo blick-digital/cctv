@@ -36,6 +36,25 @@
     for (var i = 0; i < ink.length; i++) ink[i] = Math.sqrt(paper[i]) - Math.sqrt(ink[i]);
     return ink;
   }
+  function buildFields(event) {
+    var { normalPixels, softPixels, width, height, range, maxGrowth } = event.data;
+    var normalMask = new Uint8Array(width * height), softMask = new Uint8Array(width * height);
+    for (var i = 0; i < normalMask.length; i++) {
+      normalMask[i] = normalPixels[i * 4 + 3] > 127;
+      softMask[i] = softPixels[i * 4 + 3] > 105;
+    }
+    var normal = signedDistance(normalMask, width, height);
+    var soft = signedDistance(softMask, width, height);
+    var pixels = new Uint8ClampedArray(width * height * 4);
+    for (var i = 0; i < normal.length; i++) {
+      var grown = Math.min(soft[i], normal[i] + maxGrowth);
+      pixels[i * 4] = Math.round(127.5 + normal[i] * 127.5 / range);
+      pixels[i * 4 + 1] = Math.round(127.5 + grown * 127.5 / range);
+      pixels[i * 4 + 2] = normalPixels[i * 4 + 3];
+      pixels[i * 4 + 3] = 255;
+    }
+    self.postMessage(pixels, [pixels.buffer]);
+  }
   function init() {
     if (/^(www\.)?tilda\.(ru|cc)$/.test(location.hostname)) return;
     document.querySelectorAll('[data-fluid-text], [data-fluid-logo]').forEach(initHost);
@@ -54,6 +73,7 @@
     var mouseX = 0, mouseY = 0, followX = 0, followY = 0, dragX = 0, dragY = 0;
     var resizeTimer, introTimer, introRunning = false, unavailable = false;
     var visible = false, fontsReady = false, needsBuild = true;
+    var buildId = 0;
     function enabled() { return visible && desktop.matches && !reduced.matches && !document.hidden; }
     function restore() {
       cancelAnimationFrame(frame); clearTimeout(introTimer); introRunning = false; frame = 0; previous = 0; strength = 0; over = false;
@@ -112,7 +132,8 @@
       uniforms = {}; ['size','pointer','drag','ink','radius','strength','band','pixel'].forEach(function (key) { uniforms[key] = gl.getUniformLocation(program, key); });
       canvas.addEventListener('webglcontextlost', function (event) { event.preventDefault(); unavailable = true; restore(); });
     }
-    function build() {
+    async function build() {
+      var id = ++buildId;
       if (!visible || !fontsReady || (logo && !logo.naturalWidth)) { needsBuild = true; return; }
       needsBuild = false;
       restore();
@@ -180,14 +201,22 @@
         // one contour at every intermediate state, without overlapping copies.
         blur.filter = 'blur(' + ((logo ? .7 : 7.2) * ratio).toFixed(2) + 'px)'; blur.drawImage(thick,0,0);
         var normalPixels = ctx.getImageData(0,0,width,height).data, softPixels = blur.getImageData(0,0,width,height).data;
-        var normalMask = new Uint8Array(width*height), softMask = new Uint8Array(width*height);
-        for (var i = 0; i < normalMask.length; i++) { normalMask[i] = normalPixels[i*4+3] > 127 ? 1 : 0; softMask[i] = softPixels[i*4+3] > 105 ? 1 : 0; }
-        var normal = signedDistance(normalMask,width,height), soft = signedDistance(softMask,width,height), pixels = new Uint8Array(width*height*4);
         var maxGrowth = (logo ? 1.15 : 4) * ratio;
-        for (var i = 0; i < normal.length; i++) { soft[i] = Math.min(soft[i],normal[i]+maxGrowth); pixels[i*4] = Math.round(Math.max(0,Math.min(255,127.5+normal[i]*127.5/range))); pixels[i*4+1] = Math.round(Math.max(0,Math.min(255,127.5+soft[i]*127.5/range))); pixels[i*4+2] = normalPixels[i*4+3]; pixels[i*4+3] = 255; }
+        var pixels = await new Promise(function (resolve, reject) {
+          // Keep the worker self-contained for local file previews.
+          var script = new Blob([distances, '\n', signedDistance, '\nself.onmessage = ', buildFields], { type: 'text/javascript' });
+          var url = URL.createObjectURL(script);
+          var worker;
+          try { worker = new Worker(url); } finally { URL.revokeObjectURL(url); }
+          worker.onmessage = function (event) { worker.terminate(); resolve(event.data); };
+          worker.onerror = function (error) { worker.terminate(); reject(error); };
+          worker.postMessage({ normalPixels, softPixels, width, height, range, maxGrowth }, [normalPixels.buffer, softPixels.buffer]);
+        });
+        if (id !== buildId || unavailable) return;
+        if (!desktop.matches || reduced.matches) { needsBuild = true; return; }
         canvas.width = width; canvas.height = height; canvas.style.width = (width/ratio) + 'px'; canvas.style.height = (height/ratio) + 'px';
         gl.viewport(0,0,width,height); gl.useProgram(program); gl.bindTexture(gl.TEXTURE_2D,texture);
-        gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,width,height,0,gl.RGBA,gl.UNSIGNED_BYTE,pixels);
+        gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,width,height,0,gl.RGBA,gl.UNSIGNED_BYTE,new Uint8Array(pixels.buffer));
         color = (style.color.match(/[\d.]+/g) || [15,15,15]).slice(0,3).map(function (n) { return Number(n)/255; });
         if (logo) {
           // Keep the visible colors intact at rest and along the expanding edge.
@@ -206,7 +235,11 @@
           name.textContent = ''; name.append(base,canvas);
         }
         name.classList.add('pf-fluid-host'); name.dataset.fluidName = 'ready';
-      } catch (_) { unavailable = true; restore(); }
+      } catch (_) {
+        if (id !== buildId) return;
+        unavailable = true;
+        restore();
+      }
     }
     function paint(time) {
       frame = 0; if (!base || !gl) return;
