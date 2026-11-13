@@ -5,6 +5,8 @@
   --b2-divider: rgba(230, 230, 227, .16);
   --dark-outline: var(--b2-light-line);
   --line: var(--b2-gold-line);
+  --b2-services-top: calc(72 * var(--u));
+  --b2-services-bottom: calc(130 * var(--u));
 }
 
 .hero-title { font-weight: 400; }
@@ -125,7 +127,11 @@
 }
 
 /* Services with category tabs. */
-.b2-services { padding-block: calc(72 * var(--u)) calc(130 * var(--u)); }
+.b2-services { padding-block: var(--b2-services-top) var(--b2-services-bottom); }
+/* The directions cards already end one --pad above the edge of the stage. */
+.stage + .b2-services {
+  padding-block-start: calc(var(--b2-services-top) + var(--b2-services-bottom) - var(--pad));
+}
 .b2-services-head .sec-side { align-content: space-between; }
 .b2-services-head .h2 { overflow-wrap: anywhere; }
 @media (min-width: 1024px) {
@@ -384,8 +390,11 @@
 .ftr .b2-footer-address-label { margin-top: calc(24 * var(--u)); margin-bottom: calc(14 * var(--u)); }
 
 @media (max-width: 1023px) {
+  :root[data-version="black-2"] {
+    --b2-services-top: 70px;
+    --b2-services-bottom: 70px;
+  }
   .hero-title { font-size: clamp(30px, 9vw, 100px); }
-  .b2-services { padding-block: 70px; }
   .b2-services-head .sec-side { gap: 16px; }
   .b2-service-selector { margin-top: 40px; }
   .b2-service-index { gap: 0; padding-right: 0; }
