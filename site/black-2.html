@@ -13,7 +13,7 @@
 <link rel="stylesheet" href="css/style.css?v=74">
 <link rel="stylesheet" href="css/fonts-dark.css?v=1">
 <link rel="stylesheet" href="css/dark.css?v=20">
-<link rel="stylesheet" href="css/black-2.css?v=24">
+<link rel="stylesheet" href="css/black-2.css?v=36">
 </head>
 <body>
 
@@ -193,17 +193,6 @@
     </div>
   </section>
 
-  <section class="sec b2-services b2-services--list" id="services-two" aria-labelledby="services-two-title">
-    <div class="grid b2-services-head">
-      <div class="c1-2 sec-side">
-        <span class="label" data-reveal>/ Услуги 2</span>
-        <button class="pill pill--cta" type="button" data-open="lead" data-reveal><span>Обсудить проект</span><i class="pill-dot"><svg aria-hidden="true"><use href="#i-arrow"/></svg></i></button>
-      </div>
-      <h2 class="h2 c3-5" id="services-two-title" data-split>Полный цикл:<br>Проектирование и<br>строительно-монтажные<br>работы</h2>
-    </div>
-    <div class="b2-service-list" data-service-list></div>
-  </section>
-
   <!-- 6. Как мы работаем -->
   <section class="sec steps" id="process">
     <div class="grid">
@@ -215,8 +204,6 @@
       <ol class="steps-list" data-steps></ol>
     </div>
   </section>
-
-  <div class="b2-wordmark" aria-hidden="true"><p>CCTV GROUP</p></div>
 
   <!-- 7. Нам доверяют -->
   <section class="sec trust" id="clients">
@@ -236,40 +223,9 @@
     </div>
   </section>
 
-  <!-- 8. Заявка -->
-  <section class="sec contact" id="contacts">
-    <div class="contact-bg" aria-hidden="true"><img src="assets/img/form-bg.jpg" alt="" loading="lazy"><i></i></div>
-    <div class="grid contact-grid">
-      <div class="c1-2 contact-side">
-        <span class="label" data-reveal>/ Заявка</span>
-        <h2 class="contact-title" data-split>Расскажите<br>о&nbsp;задаче</h2>
-        <p class="contact-text" data-reveal>Укажите направление — заявка сразу попадёт нужному менеджеру.</p>
-        <div class="contact-links" data-reveal>
-          <a class="phone-big" data-phone></a>
-          <a data-email></a>
-          <span class="sm" data-address></span>
-        </div>
-      </div>
-      <form class="c3-5 form form--dark js-form" data-title="Заявка" novalidate>
-        <fieldset class="chips-field">
-          <legend>Направление</legend>
-          <div class="chips" data-dir-chips></div>
-        </fieldset>
-        <div class="form-row">
-          <label class="field"><span>Имя</span><input name="name" type="text" autocomplete="name" required></label>
-          <label class="field"><span>Телефон</span><input name="phone" type="tel" autocomplete="tel" placeholder="+7" required></label>
-        </div>
-        <label class="field"><span>Задача</span><textarea name="msg" rows="3"></textarea></label>
-        <div class="form-foot">
-          <label class="check"><input type="checkbox" required><i></i><span>Я подтверждаю ознакомление и даю <a href="#" data-legal="consent" target="_blank">Согласие на обработку</a> моих персональных данных в порядке и на условиях, указанных в <a href="#" data-legal="privacy" target="_blank">Политике обработки персональных данных</a></span></label>
-          <button class="pill pill--cta" type="submit"><span>Отправить</span><i class="pill-dot"><svg><use href="#i-arrow"/></svg></i></button>
-        </div>
-      </form>
-    </div>
-  </section>
 </main>
 
-<!-- 9. Подвал -->
+<!-- Подвал -->
 <footer class="ftr">
   <div class="grid ftr-cols">
     <div class="c1"><svg class="logo-svg" viewBox="0 0 157 34" width="157" height="34" role="img" aria-label="CCTV Group">
@@ -333,12 +289,14 @@
       <path d="M152.659 33.8055V28.6158H154.651C155.098 28.6158 155.481 28.6864 155.795 28.8305C156.109 28.9747 156.353 29.1802 156.525 29.4532C156.694 29.7261 156.782 30.0482 156.782 30.4254C156.782 30.8027 156.697 31.1248 156.525 31.3947C156.356 31.6646 156.112 31.8731 155.795 32.0173C155.478 32.1615 155.098 32.2351 154.651 32.2351H153.061L153.39 31.8854V33.8055H152.659ZM153.39 31.959L153.061 31.5879H154.63C155.098 31.5879 155.451 31.4867 155.692 31.2843C155.934 31.0818 156.055 30.7935 156.055 30.4254C156.055 30.0574 155.934 29.7691 155.692 29.5666C155.451 29.3642 155.098 29.263 154.63 29.263H153.061L153.39 28.8919V31.9621V31.959Z" fill="#E6E6E3"/>
     </svg></div>
     <div class="c2"><span class="label">/ Направления</span><ul data-ftr-dirs></ul></div>
-    <div class="c3"><span class="label">/ Компания</span><ul data-ftr-company></ul></div>
+    <div class="c3 b2-footer-company"><span class="label">/ Компания</span><ul data-ftr-company></ul></div>
     <div class="b2-footer-contacts">
       <span class="label">/ Контакты</span>
       <ul><li><a data-phone></a></li><li><a data-email></a></li></ul>
-      <span class="label b2-footer-address-label">/ Адрес</span>
-      <p data-address></p>
+      <div class="b2-footer-address">
+        <span class="label">/ Адрес</span>
+        <p data-address></p>
+      </div>
     </div>
   </div>
   <div class="ftr-word" aria-hidden="true" data-fluid-text>
@@ -357,6 +315,38 @@
     <a class="credit" href="https://blickdesign.ru" target="_blank" rel="noopener"><span>Сайт разработан в</span><svg class="blick" viewBox="80 -735 4072 855" aria-hidden="true" focusable="false"><path fill="currentColor" d="M80 -308Q80 -483 146.5 -594.5Q213 -706 356 -735V-657Q254 -630 210.5 -542.0Q167 -454 167 -308Q167 -162 210.5 -73.5Q254 15 356 42V120Q213 91 146.5 -21.0Q80 -133 80 -308ZM525.0 -705H775.0Q870.0 -705 930.0 -690.0Q990.0 -675 1021.0 -637.5Q1052.0 -600 1052.0 -533Q1052.0 -459 1009.0 -424.0Q966.0 -389 903.0 -385V-357Q995.0 -354 1049.5 -316.5Q1104.0 -279 1104.0 -188Q1104.0 -83 1029.0 -41.5Q954.0 0 811.0 0H525.0ZM815.0 -90Q878.0 -90 916.5 -98.5Q955.0 -107 975.5 -132.5Q996.0 -158 996.0 -207Q996.0 -276 951.5 -300.5Q907.0 -325 815.0 -325H632.0V-90ZM782.0 -409Q838.0 -409 873.0 -416.5Q908.0 -424 927.5 -446.5Q947.0 -469 947.0 -513Q947.0 -561 928.0 -583.5Q909.0 -606 876.0 -612.0Q843.0 -618 782.0 -618H632.0V-409ZM1242.0 -68V-705H1349.0V-93H1700.0V0H1311.0Q1278.0 0 1260.0 -17.5Q1242.0 -35 1242.0 -68ZM2229.0 -705V-613H2071.0V-93H2229.0V0H1806.0V-93H1964.0V-613H1806.0V-705ZM2360.0 -353Q2360.0 -456 2401.0 -539.0Q2442.0 -622 2519.5 -669.0Q2597.0 -716 2701.0 -716Q2840.0 -716 2926.5 -640.5Q3013.0 -565 3029.0 -433H2921.0Q2909.0 -523 2852.0 -572.5Q2795.0 -622 2701.0 -622Q2590.0 -622 2529.5 -549.5Q2469.0 -477 2469.0 -353Q2469.0 -229 2529.5 -156.0Q2590.0 -83 2701.0 -83Q2795.0 -83 2852.0 -132.5Q2909.0 -182 2921.0 -273H3029.0Q3013.0 -140 2926.5 -64.5Q2840.0 11 2701.0 11Q2597.0 11 2519.5 -36.5Q2442.0 -84 2401.0 -166.5Q2360.0 -249 2360.0 -353ZM3170.0 -705H3277.0V-403H3326.0L3612.0 -705H3745.0L3422.0 -360L3748.0 0H3609.0L3323.0 -315H3277.0V0H3170.0ZM4152.0 -307Q4152.0 -132 4085.5 -20.5Q4019.0 91 3876.0 120V42Q3978.0 15 4021.5 -73.0Q4065.0 -161 4065.0 -307Q4065.0 -453 4021.5 -541.5Q3978.0 -630 3876.0 -657V-735Q4019.0 -706 4085.5 -594.0Q4152.0 -482 4152.0 -307Z"/></svg><span class="sr">BLICK</span></a>
   </div>
 </footer>
+
+<!-- Заявка -->
+<section class="sec contact" id="contacts" aria-labelledby="contact-title">
+  <div class="contact-bg" aria-hidden="true"><img src="assets/img/form-bg.jpg" alt="" loading="lazy"><i></i></div>
+  <div class="grid contact-grid">
+    <div class="c1-2 contact-side">
+      <span class="label" data-reveal>/ Заявка</span>
+      <h2 class="contact-title" id="contact-title" data-split>Расскажите<br>о&nbsp;задаче</h2>
+      <p class="contact-text" data-reveal>Укажите направление —<br>заявка сразу попадёт нужному менеджеру.</p>
+      <div class="contact-links" data-reveal>
+        <a class="phone-big" data-phone></a>
+        <a data-email></a>
+        <span class="sm" data-address></span>
+      </div>
+    </div>
+    <form class="c3-5 form form--dark js-form" data-title="Заявка" novalidate>
+      <fieldset class="chips-field">
+        <legend>Направление</legend>
+        <div class="chips" data-dir-chips></div>
+      </fieldset>
+      <div class="form-row">
+        <label class="field"><span>Имя</span><input name="name" type="text" autocomplete="name" required></label>
+        <label class="field"><span>Телефон</span><input name="phone" type="tel" autocomplete="tel" placeholder="+7" required></label>
+      </div>
+      <label class="field"><span>Задача</span><textarea name="msg" rows="3"></textarea></label>
+      <div class="form-foot">
+        <label class="check"><input type="checkbox" required><i></i><span>Я подтверждаю ознакомление и даю <a href="#" data-legal="consent" target="_blank">Согласие на обработку</a> моих персональных данных в порядке и на условиях, указанных в <a href="#" data-legal="privacy" target="_blank">Политике обработки персональных данных</a></span></label>
+        <button class="pill pill--cta" type="submit"><span>Отправить</span><i class="pill-dot"><svg><use href="#i-arrow"/></svg></i></button>
+      </div>
+    </form>
+  </div>
+</section>
 
 <!-- Полноэкранное меню -->
 <div class="menu" id="menu" hidden>
@@ -394,7 +384,7 @@
 <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
 <script src="js/data.js?v=39"></script>
 <script src="js/hero-loop.js?v=1"></script>
-<script src="js/black-2.js?v=16"></script>
+<script src="js/black-2.js?v=19"></script>
 <script src="js/footer-lines-dark.js?v=1"></script>
 <script src="js/footer-fluid-black-2.js?v=2"></script>
 </body>

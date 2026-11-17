@@ -35,6 +35,7 @@
   $$('[data-address]').forEach(el => { el.textContent = D.ADDRESS; });
   $$('[data-proto]').forEach(a => { a.href = proto(a.dataset.proto); });
   $$('[data-legal]').forEach(a => { a.href = D.LEGAL[a.dataset.legal]; });
+  $('#contacts').append($('.ftr > .ftr-bot').cloneNode(true));
 
   // пилюли первого экрана (для телефона и режима без анимации)
   $('[data-hero-pills]').innerHTML = D.DKEYS.map(k =>
@@ -60,7 +61,6 @@
   const serviceNumber = index => `${pad2(index + 1)} / ${pad2(serviceGroups.length)}`;
   const serviceTabs = $('[data-service-tabs]');
   const servicePanels = $('[data-service-panels]');
-  const serviceList = $('[data-service-list]');
   const serviceIndex = $('[data-service-number]');
 
   serviceTabs.innerHTML = serviceGroups.map((group, index) => `
@@ -85,32 +85,6 @@
         }).join('')}</ul>
       </div>
     </article>`).join('');
-
-  serviceList.innerHTML = serviceGroups.map((group, index) => `
-    <div class="b2-service-item">
-      <button class="b2-service-toggle" type="button" id="service-two-${group.k}"
-        aria-expanded="false" aria-controls="service-detail-${group.k}">
-        <span class="b2-service-meta" aria-hidden="true"><span>${serviceNumber(index)}</span><span>${group.tag}</span></span>
-        <span class="b2-service-row-title">${group.name}</span>
-        ${ARROW}
-      </button>
-      <figure class="b2-service-preview" aria-hidden="true"><img src="${group.img}" alt="" loading="lazy"></figure>
-      <div class="b2-service-detail" id="service-detail-${group.k}" role="region"
-        aria-labelledby="service-two-${group.k}" inert>
-        <div class="b2-service-detail-clip">
-          <div class="b2-service-detail-body">
-            <figure class="b2-service-photo" aria-hidden="true"><img src="${group.img}" alt="" loading="lazy"></figure>
-            <div class="b2-service-detail-copy">
-              <p class="svc-desc">${group.desc}</p>
-              <ul>${group.items.map(key => {
-                const [name, description] = D.SERVICES[key];
-                return `<li><h3>${name}</h3><p>${description}</p></li>`;
-              }).join('')}</ul>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>`).join('');
 
   const tabs = $$('[role="tab"]', serviceTabs);
   const panels = $$('[role="tabpanel"]', servicePanels);
@@ -148,21 +122,6 @@
     selectService(indices[event.key]);
     tabs[selectedService].focus();
   });
-  let openService = null;
-  function setServiceOpen(button, open) {
-    button.setAttribute('aria-expanded', String(open));
-    button.parentElement.classList.toggle('is-open', open);
-    document.getElementById(button.getAttribute('aria-controls')).inert = !open;
-  }
-  serviceList.addEventListener('click', event => {
-    const button = event.target.closest('.b2-service-toggle');
-    if (!button) return;
-    const next = openService === button ? null : button;
-    if (openService) setServiceOpen(openService, false);
-    openService = next;
-    if (openService) setServiceOpen(openService, true);
-  });
-
   // шаги
   $('[data-steps]').innerHTML = D.STEPS.map((s, i) => `
     <li class="step">
@@ -248,7 +207,7 @@
       <a href="${proto(k)}">${D.DIRS[k].brand}${ARROW}</a>
       <ul>${D.DIRS[k].subs.map(s => `<li><a href="${proto(k)}">${s}</a></li>`).join('')}</ul>
     </div>`).join('');
-  const onPage = [['#directions', 'Направления'], ['#services', 'Услуги'], ['#services-two', 'Услуги 2'], ['#process', 'Как мы работаем'], ['#clients', 'Клиенты'], ['#contacts', 'Контакты']];
+  const onPage = [['#directions', 'Направления'], ['#services', 'Услуги'], ['#process', 'Как мы работаем'], ['#clients', 'Клиенты'], ['#contacts', 'Контакты']];
   $('[data-menu-main]').innerHTML = '<span class="label" data-m>/ На странице</span>' +
     onPage.map(([h, t], i) => `<a href="${h}" data-m style="--d:${i + 2}"><span>${t}</span></a>`).join('') +
     '<span class="label" data-m style="--d:9;margin-top:28px">/ Компания</span>' +
@@ -416,35 +375,21 @@
       },
     });
 
-    // «Заявка» накрывает последний экран «Нам доверяют» естественным скроллом.
+    // «Заявка» накрывает футер после того, как его нижний край вошёл в экран.
     mm.add('(prefers-reduced-motion: no-preference)', () => {
-      const trust = $('#clients');
+      const footer = $('.ftr');
       const contact = $('#contacts');
-      trust.classList.add('trust--underlay');
       contact.classList.add('contact--overlap');
-      const trustPinTop = () => {
-        const style = getComputedStyle(trust);
-        const top = parseFloat(style.paddingTop);
-        const bottom = parseFloat(style.paddingBottom);
-        const contentHeight = trust.offsetHeight - top - bottom;
-        // Центрируем содержимое, а не внешнюю секцию с большими полями.
-        // На узких экранах длинный раздел сначала можно дочитать до конца.
-        return contentHeight > innerHeight - 80
-          ? innerHeight - trust.offsetHeight
-          : (innerHeight - contentHeight) / 2 - top;
-      };
       ScrollTrigger.create({
-        trigger: trust,
-        start: () => `top ${trustPinTop()}px`,
-        end: () => '+=' + (trust.offsetHeight + trustPinTop()),
+        trigger: footer,
+        start: 'bottom bottom',
+        endTrigger: contact,
+        end: 'top top',
         pin: true,
         pinSpacing: false,
         invalidateOnRefresh: true,
       });
-      return () => {
-        trust.classList.remove('trust--underlay');
-        contact.classList.remove('contact--overlap');
-      };
+      return () => contact.classList.remove('contact--overlap');
     });
 
     // пересчёт после загрузки шрифтов и картинок
@@ -457,7 +402,6 @@
         refreshTimer = setTimeout(() => ScrollTrigger.refresh(), 120);
       });
       servicesResize.observe(servicePanels);
-      servicesResize.observe(serviceList);
     }
   } else {
     $$('.step').forEach(s => s.classList.add('is-on'));
@@ -492,9 +436,9 @@
     hdr.classList.toggle('is-light', !overDark);
     const inPin = stageST && stageST.isActive;
     const down = y > lastY + 4, up = y < lastY - 4;
-    const inContactOrFooter = $('#contacts').getBoundingClientRect().top < innerHeight;
+    const inContact = $('#contacts').getBoundingClientRect().top < innerHeight;
     if (!document.body.classList.contains('menu-open')) {
-      if (inContactOrFooter) hdr.classList.add('is-hidden');
+      if (inContact) hdr.classList.add('is-hidden');
       else if (down && y > 300 && !inPin) hdr.classList.add('is-hidden');
       else if (up || y < 300) hdr.classList.remove('is-hidden');
     }
@@ -585,7 +529,6 @@
       start();
     }).observe(set);
     function updateVisibility() {
-      // ScrollTrigger fixes the section in place while the contacts slide over it.
       const { top, bottom } = row.getBoundingClientRect();
       visible = bottom > 0 && top < innerHeight;
       if (visible) start();
