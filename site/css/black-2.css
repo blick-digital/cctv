@@ -128,8 +128,8 @@
 
 /* Services with category tabs. */
 .b2-services { padding-block: var(--b2-services-top) var(--b2-services-bottom); }
-/* The directions cards already end one --pad above the edge of the stage. */
-.stage + .b2-services {
+/* Directions contribute one --pad. ScrollTrigger can wrap their stage. */
+#services {
   padding-block-start: calc(var(--b2-services-top) + var(--b2-services-bottom) - var(--pad));
 }
 .b2-services-head .sec-side { align-content: space-between; }
