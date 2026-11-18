@@ -66,6 +66,9 @@
     const title = d.titleLines?.join('<br> ')
       ?? mobileCardTitles[k]?.join('<br class="dcard-mobile-break"> ')
       ?? d.title;
+    const description = k === 'business'
+      ? d.card.replace(' складам и АЗС', '<br class="dcard-mobile-break"> складам и АЗС')
+      : cardDescriptions[k]?.join('<br> ') ?? d.card;
     return `<a class="dcard ${k}" href="${proto(k)}" aria-label="${d.brand}: ${d.title}">
       <div class="dcard-bg"><img src="${d.img}" alt="" decoding="async"><i class="dcard-tint"></i></div>
       <i class="dcard-frame"></i>
@@ -73,7 +76,7 @@
       <span class="dcard-arrow">${ARROW}</span>
       <div class="dcard-body">
         <h3 class="dcard-title">${title}</h3>
-        <p class="dcard-text">${cardDescriptions[k]?.join('<br> ') ?? d.card}</p>
+        <p class="dcard-text">${description}</p>
         <ul class="dcard-subs">${d.subs.map(s => `<li>${s}</li>`).join('')}</ul>
         <span class="dcard-go"><span>Подробнее о направлении</span><span>→</span></span>
       </div>
