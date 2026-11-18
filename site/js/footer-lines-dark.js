@@ -10,12 +10,14 @@
   if (!ctx) return;
   footer.prepend(canvas);
 
-  let width = 0, height = 0, gradient;
+  let width = 0, height = 0, contourWidth = 0, gradient;
   let visible = false, frame = 0, last = 0, phase = 0;
 
   function resize() {
     width = footer.clientWidth;
     height = footer.clientHeight;
+    const minContourWidth = parseFloat(getComputedStyle(footer).getPropertyValue('--footer-contour-width')) || 0;
+    contourWidth = Math.max(width, minContourWidth);
     const dpr = Math.min(devicePixelRatio || 1, 1.5);
     canvas.width = Math.round(width * dpr);
     canvas.height = Math.round(height * dpr);
@@ -39,6 +41,8 @@
     ctx.strokeStyle = gradient;
     ctx.lineWidth = 0.85;
     const lines = width < 700 ? 18 : 30;
+    const contourScale = contourWidth > 0 ? width / contourWidth : 1;
+    const waveHeight = height * contourScale;
     for (let row = 0; row < lines; row++) {
       const band = row / (lines - 1);
       ctx.globalAlpha = 0.35 + 0.65 * Math.sin(band * Math.PI);
@@ -46,10 +50,11 @@
       for (let step = 0; step <= 88; step++) {
         const u = step / 88;
         const x = u * width;
+        const waveX = .5 + (u - .5) * contourScale;
         const envelope = 0.65 + Math.sin(u * Math.PI) * 0.35;
         const y = height * (0.09 + band * 0.78)
-          + Math.sin(u * 6.5 + phase + band * 1.8) * height * 0.13 * envelope
-          + Math.sin(u * 11 - phase * 0.6 + band * 2.2) * height * 0.045 * envelope;
+          + Math.sin(waveX * 6.5 + phase + band * 1.8) * waveHeight * 0.13 * envelope
+          + Math.sin(waveX * 11 - phase * 0.6 + band * 2.2) * waveHeight * 0.045 * envelope;
         if (step === 0) ctx.moveTo(x, y);
         else ctx.lineTo(x, y);
       }

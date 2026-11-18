@@ -17,6 +17,11 @@
     titleLines: ['Квартиры', 'и дома:', 'от проекта', 'до новоселья'],
     subs: ['Квартира', 'Загородные дома', 'Дизайн-проекты'],
   };
+  const mobileCardTitles = {
+    contract: ['Крупные', 'объекты под', 'ключ'],
+    business: ['Строительство', 'и ремонт', 'коммерческих', 'объектов'],
+    telecom: ['Работы для', 'операторов', 'связи'],
+  };
   const cardDescriptions = {
     contract: ['Девелоперам, социальным', 'и промышленным объектам'],
     home: ['Частным заказчикам:', 'квартиры и загородные дома'],
@@ -37,6 +42,20 @@
   $$('[data-legal]').forEach(a => { a.href = D.LEGAL[a.dataset.legal]; });
   $('#contacts').append($('.ftr > .ftr-bot').cloneNode(true));
 
+  const contactGrid = $('#contacts .contact-grid');
+  const contactSide = $('.contact-side', contactGrid);
+  const contactLinks = $('.contact-links', contactSide);
+  const serviceSide = $('.b2-services-head .sec-side');
+  const serviceButton = $('.pill', serviceSide);
+  const serviceSelector = $('.b2-service-selector');
+  const mobileLayout = matchMedia('(max-width: 1023px)');
+  const positionResponsiveContent = () => {
+    (mobileLayout.matches ? contactGrid : contactSide).append(contactLinks);
+    (mobileLayout.matches ? serviceSelector : serviceSide).append(serviceButton);
+  };
+  positionResponsiveContent();
+  mobileLayout.addEventListener('change', positionResponsiveContent);
+
   // пилюли первого экрана (для телефона и режима без анимации)
   $('[data-hero-pills]').innerHTML = D.DKEYS.map(k =>
     `<a class="dpill ${k}" href="${proto(k)}"><span>${D.DIRS[k].short}</span>${ARROW}</a>`).join('');
@@ -44,13 +63,16 @@
   // карточки направлений: на десктопе это те же пилюли, которые раскрываются
   $('[data-dir-cards]').innerHTML = D.DKEYS.map(k => {
     const d = k === 'home' ? home : D.DIRS[k];
+    const title = d.titleLines?.join('<br> ')
+      ?? mobileCardTitles[k]?.join('<br class="dcard-mobile-break"> ')
+      ?? d.title;
     return `<a class="dcard ${k}" href="${proto(k)}" aria-label="${d.brand}: ${d.title}">
       <div class="dcard-bg"><img src="${d.img}" alt="" decoding="async"><i class="dcard-tint"></i></div>
       <i class="dcard-frame"></i>
       <span class="dcard-name">${d.short}</span>
       <span class="dcard-arrow">${ARROW}</span>
       <div class="dcard-body">
-        <h3 class="dcard-title">${d.titleLines ? d.titleLines.join('<br> ') : d.title}</h3>
+        <h3 class="dcard-title">${title}</h3>
         <p class="dcard-text">${cardDescriptions[k]?.join('<br> ') ?? d.card}</p>
         <ul class="dcard-subs">${d.subs.map(s => `<li>${s}</li>`).join('')}</ul>
         <span class="dcard-go"><span>Подробнее о направлении</span><span>→</span></span>
@@ -245,7 +267,10 @@
   // <br> сохраняем; слова, связанные неразрывным пробелом (предлог + слово), остаются вместе
   $$('[data-split]').forEach(el => {
     const lines = el.innerHTML.split(/<br\s*\/?>/i).map(l => { const t = document.createElement('div'); t.innerHTML = l; return t.textContent.trim(); });
-    el.innerHTML = lines.map(l => l.split(/[ \t\n]+/).filter(Boolean).map(w => `<span class="w"><span>${w}</span></span>`).join(' ')).join('<br> ');
+    el.innerHTML = lines.map(l => l.split(/[ \t\n]+/).filter(Boolean).map(w => {
+      const className = w.includes('-') ? 'w w--hyphenated' : 'w';
+      return `<span class="${className}"><span>${w}</span></span>`;
+    }).join(' ')).join('<br> ');
   });
 
   if (hasGsap) {
@@ -255,13 +280,14 @@
     /* ---- вступление первого экрана ---- */
     if (!reduce) {
       const intro = gsap.timeline({ defaults: { ease: 'expo.out' }, delay: 0.1 });
+      const leadStart = 0.7;
       intro.from('.hero-bg img, .hero-bg video', { scale: 1.22, duration: 2.4, ease: 'power3.out' }, 0)
         .from('.hero-title .line-mask > span', { yPercent: 105, duration: 1.4 }, 0.25)
         .from('.hero-sub span', { yPercent: 60, opacity: 0, duration: 1.1, stagger: 0.08 }, 0.55)
         .from('.hero-row .pill', { opacity: 0, duration: 1.1, clearProps: 'opacity' }, 0.6)
         .from('.hero-line--long', { scaleX: 0, duration: 1.6, ease: 'power3.inOut' }, 0.4)
         .from('.hero-line--short', { scaleX: 0, duration: 1.2, ease: 'power3.inOut' }, 0.8)
-        .from('.hero-lead > span', { yPercent: 70, opacity: 0, duration: 1.1, stagger: 0.08 }, 0.7)
+        .from('.hero-lead > span', { yPercent: 70, opacity: 0, duration: 1.1, stagger: 0.08 }, leadStart)
         .from('.hdr .logo, .hdr .nav a, .hdr .circ', { opacity: 0, y: -14, duration: 1, stagger: 0.04 }, 0.3);
       // пилюли: в режиме сцены это карточки, иначе отдельные ссылки
       intro.add(() => {}, 0);
@@ -271,7 +297,7 @@
       mm.add('(max-width: 1023px)', () => {
         intro.from('.dpill', { opacity: 0, y: 30, duration: 1, stagger: 0.06, clearProps: 'opacity,transform' }, 0.85);
       });
-      intro.addLabel('signature', intro.duration())
+      intro.addLabel('signature', mobileLayout.matches ? leadStart : intro.duration())
         .fromTo('.hero-signature p', { y: 6, opacity: 0 }, {
           y: 0, opacity: 1, duration: 1.15, force3D: false, clearProps: 'transform,opacity',
         }, 'signature')

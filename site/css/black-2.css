@@ -103,6 +103,7 @@
   z-index: 0; background: var(--direction-tint); opacity: 1;
 }
 .dcard-title { display: block; }
+.dcard-mobile-break { display: none; }
 .dirs .dcard-arrow {
   transform: rotate(45deg);
 }
@@ -156,6 +157,7 @@
 .b2-services-head .sec-side { align-content: space-between; }
 .b2-services-head .h2 { overflow-wrap: anywhere; }
 @media (min-width: 1024px) {
+  #services-title br:nth-of-type(2) { display: none; }
   .b2-services-head .pill { margin-bottom: calc(.16 * var(--fs-h2)); }
 }
 .b2-service-selector { margin-top: calc(150 * var(--u)); }
@@ -343,15 +345,95 @@
   :root[data-version="black-2"] {
     --b2-services-top: 70px;
     --b2-services-bottom: 70px;
+    --b2-section-title-size: min(34px, calc((100vw - 2 * var(--pad)) / 10.63));
   }
-  .hero-title { font-size: clamp(30px, 9vw, 100px); }
+  .hero {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    align-content: end;
+    justify-items: center;
+    height: auto;
+    min-height: 100svh;
+    padding: calc(var(--hdr-h) + 24px) var(--pad) 20px;
+  }
+  .hero-bg img { object-position: 22% 52%; }
+  .hero-bg video { object-position: var(--hero-mobile-video-x, 20%) 52%; }
+  .hero-brand, .hero-row { display: contents; }
+  .hero :is(.hero-title, .hero-sub, .hero-row > .pill, .hero-signature) { z-index: 1; }
+  .hero-title {
+    grid-row: 1;
+    margin: 0;
+    font-size: min(47px, calc((100vw - 2 * var(--pad)) / 7.69));
+    font-weight: 500;
+  }
+  .hero-sub {
+    grid-row: 2;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: .3em;
+    margin: 10px 0 0;
+    font-size: 14px;
+    line-height: 1;
+  }
+  .hero-row > .pill { grid-row: 3; margin-top: 40px; }
+  .hero-lead {
+    grid-row: 4;
+    position: static;
+    display: grid;
+    width: auto;
+    margin-top: 40px;
+    font-size: 12px;
+    line-height: 1.2;
+    text-align: center;
+  }
+  .hero-lead .indent { padding-left: 0; }
+  .hero-line { display: none; }
+  .hero-signature {
+    grid-row: 5;
+    position: static;
+    width: 100%;
+    margin-top: 58px;
+    transform: none;
+    grid-template-columns: minmax(8px, 1fr) auto minmax(8px, 1fr);
+  }
+  .hero-pills { grid-row: 6; position: static; width: 100%; margin-top: 30px; }
+  .dcard-mobile-break { display: revert; }
+  .dcard-body { gap: 0; }
+  .dcard-body > :is(.dcard-title, .dcard-text, .dcard-subs) { min-height: 0; }
+  .dcard-body > :is(.dcard-text, .dcard-subs) { margin-top: 20px; }
+  .dcard-go { margin-top: 10px; padding-top: 10px; }
+  :is(.dirs-title, #services-title, #process .h2, #clients .h2, #contact-title) {
+    font-size: var(--b2-section-title-size);
+    padding-right: 0;
+    hyphens: none;
+    overflow-wrap: normal;
+  }
+  #services-title { letter-spacing: -.033em; }
+  #services-title .w--hyphenated, #services-title .w--hyphenated > span { display: inline; }
+  #services-title .w--hyphenated { margin: 0; padding: 0; clip-path: none; vertical-align: baseline; }
+  #services-title br:not(:nth-of-type(3)), #clients h2 br:nth-of-type(2), #contact-title br { display: revert; }
   .b2-services-head .sec-side { gap: 16px; }
   .b2-service-selector { margin-top: 40px; }
+  .b2-service-selector > .pill { grid-column: 1 / -1; justify-self: center; margin-top: 10px; }
   .b2-service-index { gap: 0; padding-right: 0; }
+  .b2-service-tabs { gap: 6px; }
+  .b2-service-tabs button { min-height: 38px; padding: 7px 9px; font-size: 10.5px; }
   .b2-service-number { display: none; }
   .b2-service-panel { grid-template-columns: minmax(0, 1fr); gap: 24px; }
   .b2-service-panel figure { max-width: 520px; }
+  .b2-service-panel .acc-btn { min-height: 52px; padding-block: 12px; }
+  .b2-service-panel .acc-btn svg { width: 18px; height: 18px; }
   #service-general .svc-word { font-size: min(26px, calc((100vw - 2 * var(--pad)) / 13.3)); }
-  .grid.ftr-cols > .b2-footer-contacts { grid-column: 1 / -1; }
+  .ftr { --footer-contour-width: 760px; grid-template-rows: 1fr auto auto; }
+  .grid.ftr-cols {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-rows: auto auto 1fr;
+    column-gap: 12px;
+  }
+  .grid.ftr-cols > .b2-footer-contacts { grid-column: 1 / -1; align-self: end; }
+  .ftr-word { margin-top: 32px; }
   .b2-footer-contacts li a { font-size: clamp(20px, 6.8vw, 33px); }
+  .contact .chip { height: 38px; padding-inline: 12px; font-size: 11px; }
+  .contact-grid > .contact-links { margin-top: 16px; }
 }

@@ -4,6 +4,8 @@
   const videos = [...document.querySelectorAll('.hero-video')];
   if (!hero || videos.length !== 2) return;
   const motion = matchMedia('(prefers-reduced-motion: reduce)');
+  const mobileCrop = document.documentElement.dataset.version === 'black-2'
+    ? matchMedia('(max-width: 1023px)') : null;
   let active = 0, frame = 0, visible = false, overlapping = false, preparing = false;
   videos.forEach((video, i) => {
     video.muted = true;
@@ -15,10 +17,22 @@
   const canRun = () => visible && !document.hidden && !motion.matches;
   const play = video => video.play().catch(() => {});
 
+  function positionMobileVideo(video) {
+    // Follow the handshake as the camera pans across the source clip.
+    const x = `${Math.min(49, 20 + video.currentTime * 4.4).toFixed(1)}%`;
+    if (video.style.getPropertyValue('--hero-mobile-video-x') !== x) {
+      video.style.setProperty('--hero-mobile-video-x', x);
+    }
+  }
+
   function tick() {
     frame = requestAnimationFrame(tick);
     const current = videos[active];
     const next = videos[1 - active];
+    if (mobileCrop?.matches) {
+      positionMobileVideo(current);
+      if (preparing || overlapping) positionMobileVideo(next);
+    }
     const fade = Math.min(1.2, current.duration * 0.22);
     if (current.readyState >= 2 && !current.paused) current.style.opacity = '1';
 
