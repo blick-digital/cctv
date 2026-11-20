@@ -23,6 +23,22 @@
 }
 .hdr::before { border-bottom-color: var(--b2-divider); }
 .nav a::after { background: rgba(230, 230, 227, .5); }
+.phone-panel {
+  width: 300px;
+  max-width: calc(100vw - 2 * var(--pad));
+  padding: 18px;
+  gap: 10px;
+  border: 0;
+  container-type: inline-size;
+}
+.phone-panel .phone-big { font-size: min(22px, 8.4cqi); }
+.phone-panel .pill {
+  --h: 48px;
+  width: 100%;
+  min-width: 0;
+  padding-inline: 20px 64px;
+  font-size: 12px;
+}
 .menu-contacts {
   grid-template-columns: minmax(0, 1fr);
   container-type: inline-size;
@@ -32,13 +48,23 @@
   font-size: min(max(18px, calc(26 * var(--u))), 8cqi);
 }
 .menu-contacts .sm { overflow-wrap: anywhere; }
+.menu-company-links { display: grid; gap: 6px; }
 @media (min-width: 1024px) {
   .menu-inner { --menu-first-row-gap: calc(23 * var(--u)); }
   .menu-dirs > .label + .menu-dir { display: flow-root; margin-top: 0; }
-  .menu-main { --menu-column-gap: 4px; row-gap: var(--menu-column-gap); }
+  .menu-main {
+    --menu-column-gap: 4px;
+    row-gap: var(--menu-column-gap);
+    height: var(--menu-company-height, auto);
+    grid-template-rows: auto minmax(0, 1fr);
+  }
+  .menu-company-links {
+    display: flex; flex-direction: column; justify-content: space-between; gap: 4px;
+    font-size: calc(26 * var(--u)); line-height: 1.25;
+  }
   .menu-contacts { --menu-column-gap: 10px; row-gap: var(--menu-column-gap); }
   .menu-dirs > .label + .menu-dir > a,
-  .menu-main > .label + a,
+  .menu-main > .label + .menu-company-links,
   .menu-contacts > .phone-big {
     /* Halvar's cap height and vertical metrics determine the space above the letters. */
     margin-top: calc(var(--menu-first-row-gap) - var(--menu-column-gap, 0px) - (1lh - .654em) / 2);
@@ -356,6 +382,7 @@
     min-height: 100svh;
     padding: calc(var(--hdr-h) + 24px) var(--pad) 20px;
   }
+  .phone-panel { right: -48px; }
   .hero-bg img { object-position: 22% 52%; }
   .hero-bg video { object-position: var(--hero-mobile-video-x, 20%) 52%; }
   .hero-brand, .hero-row { display: contents; }

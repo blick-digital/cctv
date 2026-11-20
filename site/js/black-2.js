@@ -15,7 +15,7 @@
     ...D.DIRS.home,
     title: 'Квартиры и дома: от проекта до новоселья',
     titleLines: ['Квартиры', 'и дома:', 'от проекта', 'до новоселья'],
-    subs: ['Квартира', 'Загородные дома', 'Дизайн-проекты'],
+    subs: ['Квартиры', 'Загородные дома', 'Дизайн-проекты'],
   };
   const mobileCardTitles = {
     contract: ['Крупные', 'объекты под', 'ключ'],
@@ -232,11 +232,32 @@
       <a href="${proto(k)}">${D.DIRS[k].brand}${ARROW}</a>
       <ul>${D.DIRS[k].subs.map(s => `<li><a href="${proto(k)}">${s}</a></li>`).join('')}</ul>
     </div>`).join('');
-  const onPage = [['#directions', 'Направления'], ['#services', 'Услуги'], ['#process', 'Как мы работаем'], ['#clients', 'Клиенты'], ['#contacts', 'Контакты']];
-  $('[data-menu-main]').innerHTML = '<span class="label" data-m>/ На странице</span>' +
-    onPage.map(([h, t], i) => `<a href="${h}" data-m style="--d:${i + 2}"><span>${t}</span></a>`).join('') +
-    '<span class="label" data-m style="--d:9;margin-top:28px">/ Компания</span>' +
-    D.COMPANY.map(([h, t], i) => `<a href="${proto(h)}" data-m style="--d:${i + 10}"><span>${t}</span></a>`).join('');
+  const menuCompany = D.COMPANY.map(([page, title]) => [proto(page), title]);
+  menuCompany.splice(1, 0, ['#services', 'Услуги']);
+  $('[data-menu-main]').innerHTML = '<span class="label" data-m>/ Компания</span>' +
+    '<div class="menu-company-links">' +
+    menuCompany.map(([href, title], i) => `<a href="${href}" data-m style="--d:${i + 2}"><span>${title}</span></a>`).join('') + '</div>';
+  const menuDirections = $('[data-menu-dirs]');
+  const menuCompanyColumn = $('[data-menu-main]');
+  const alignMenuCompany = () => {
+    if (mobileLayout.matches) {
+      menuCompanyColumn.style.removeProperty('--menu-company-height');
+      return;
+    }
+    const lastDirection = $('.menu-dir:last-child > a', menuDirections);
+    if (!lastDirection.offsetHeight) return;
+    const lastLink = $('.menu-company-links > a:last-child', menuCompanyColumn);
+    const belowCap = el => {
+      const style = getComputedStyle(el);
+      return (parseFloat(style.lineHeight) - parseFloat(style.fontSize) * .654) / 2;
+    };
+    const lastGroup = lastDirection.parentElement;
+    const height = lastGroup.offsetTop - menuDirections.offsetTop + lastDirection.offsetTop + lastDirection.offsetHeight
+      - belowCap(lastDirection) + belowCap(lastLink);
+    menuCompanyColumn.style.setProperty('--menu-company-height', `${height}px`);
+  };
+  new ResizeObserver(alignMenuCompany).observe(menuDirections);
+  mobileLayout.addEventListener('change', alignMenuCompany);
   $$('.menu-contacts > *').forEach((el, i) => { el.setAttribute('data-m', ''); el.style.setProperty('--d', i + 3); });
 
   /* ================= Плавный скролл ================= */
