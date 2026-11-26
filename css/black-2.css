@@ -344,6 +344,14 @@
 .form-foot .check {flex:1;min-width:0;max-width:none;font:max(12px,calc(12 * var(--u)))/1.35 var(--gl);color:rgba(255,255,255,.6);}
 .form-foot > .pill {flex-shrink:0;}
 .modal .consent-break {display:none;}
+@media (min-width:1024px) {
+  .form .chip, .form .direction-object-choice span {
+    display:inline-flex;align-items:center;justify-content:center;
+    height:calc(38.4 * var(--u) + 2px);padding:calc(12 * var(--u)) calc(18 * var(--u));
+    font:400 calc(12 * var(--u))/1.2 var(--nf);text-box-trim:none;
+  }
+  .form .chips-field legend, .form .field:has(select) > span {font-family:var(--nf);}
+}
 @media (max-width:1023px) {
   .consent-break {display:none;}
   .form-foot .check {flex-basis:100%;}

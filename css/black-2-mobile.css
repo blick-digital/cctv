@@ -76,17 +76,18 @@
   #app .contacts-info {position:static;gap:30px;}
   #app .contacts-info h1 {position:absolute;top:130px;left:var(--pad);margin:0;}
 
-  #app .case-intro {position:relative;isolation:isolate;display:flex;flex-direction:column;min-height:100svh;padding-bottom:128px;}
-  #app .case-intro .inner-hero {position:static;isolation:auto;min-height:0;padding-bottom:28px;}
+  #app .case-intro {position:relative;isolation:isolate;display:block;min-height:100svh;}
+  #app .case-intro .inner-hero {position:static;isolation:auto;min-height:0;padding-bottom:320px;}
   #app .case-intro .inner-hero-media {inset:0;height:100%;}
   #app .case-intro .inner-hero-grid {padding-top:116px;gap:24px;}
   #app .case-intro .inner-hero-content {gap:16px;}
   #app .case-intro .inner-hero h1 {font-size:clamp(25px,6.6vw,30px);}
   #app .case-intro .inner-hero-meta {display:none;}
   #app .case-intro .inner-hero-lead {font-size:16px;line-height:1.4;}
-  #app .case-intro > .blk {padding-block:0;margin-top:auto;}
+  #app .case-intro > .blk {position:absolute;left:0;right:0;bottom:128px;padding-block:0;margin-top:0;}
   #app .case-intro .case-facts {gap:16px 20px;}
   #app .case-intro .case-facts > div {gap:6px;}
+  #app .case-intro .case-facts > div:has(.case-direction) {order:1;grid-column:1 / -1;}
   #app .case-intro .case-facts p {font-size:14px;line-height:1.35;}
   #app .project-page .case-works {margin-top:-86px;padding-top:20px;}
   #app .case-story {gap:44px;}

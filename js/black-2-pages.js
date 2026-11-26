@@ -211,12 +211,12 @@ const ph = (title,ratio='16/10') => {
   const image = title === 'Главное фото объекта' ? project?.img
     : SECTION_PHOTOS[title] || window.CCTV.DIRS[direction]?.img || 'assets/img/draft-team.jpg';
   const illustration = title === 'Главное фото объекта' && (project?.illustration);
-  return `<figure class="page-photo" style="aspect-ratio:${ratio}"><img src="${image}" alt="${illustration ? 'Иллюстрация для макета. ' : ''}${title}" loading="lazy">${illustration ? '<figcaption class="photo-caption">Иллюстрация для макета</figcaption>' : ''}</figure>`;
+  return `<figure class="page-photo" style="aspect-ratio:${ratio}"><img src="${image}" alt="${illustration ? 'Иллюстрация. ' : ''}${title}" loading="lazy"></figure>`;
 };
 const blk = (label,html) => `<section class="blk" data-label="${label}"><div class="ct">${html}</div></section>`;
 
 // Shared photographic first screen for internal pages; About keeps its approved standalone layout.
-function innerHero({title, section, lead='', actions='', image, direction='', tag='', meta='', illustration=false}) {
+function innerHero({title, section, lead='', actions='', image, direction='', tag='', meta=''}) {
   return `<section class="inner-hero ${direction}" aria-labelledby="inner-page-title">
     <div class="inner-hero-media" aria-hidden="true"><img src="${image}" alt="" width="1440" height="700" fetchpriority="high"></div>
     <div class="grid inner-hero-grid">
@@ -226,7 +226,6 @@ function innerHero({title, section, lead='', actions='', image, direction='', ta
         ${meta || tag ? `<div class="inner-hero-meta" data-inner-enter>${meta ? `<p>${meta}</p>` : ''}${tag ? `<span class="inner-hero-tag">${tag}</span>` : ''}</div>` : ''}
         ${lead ? `<p class="inner-hero-lead" data-inner-enter>${lead}</p>` : ''}
         ${actions ? `<div class="inner-hero-actions" data-inner-enter>${actions}</div>` : ''}
-        ${illustration ? '<p class="inner-hero-note" data-inner-enter>Иллюстрация для макета</p>' : ''}
       </div>
     </div>
   </section>`;
@@ -240,7 +239,7 @@ function pcard(project) {
   const cover = `<img src="${photo}" alt="${project.illustration ? 'Иллюстрация. ' : ''}${project.name}, ${project.city}" loading="lazy">`;
   return `<a class="prj" href="#project-${project.slug}">
     <div class="prj-img">${cover}<span class="circ"><svg aria-hidden="true"><use href="#i-arrow"/></svg></span></div>
-    <p class="prj-meta">${project.city} · ${project.type}${project.illustration ? ' · Иллюстрация' : ''}</p>
+    <p class="prj-meta">${project.city} · ${project.type}</p>
     <h3 class="prj-name">${project.name}</h3>
     <ul class="tags">${project.works.map(key => `<li>${sname(key)}</li>`).join('')}</ul>
   </a>`;
@@ -478,7 +477,7 @@ function pgProject(slug){
     ? 'Разделили объект на захватки, определили последовательность монтажа и контрольные точки. Подготовку оснований, крепления и закрываемые узлы проверяли до перехода к следующему этапу. В описание сдачи включили исполнительные схемы и акты.'
     : 'Собрали рабочие схемы, согласовали материалы и последовательность работ. Скрытые коммуникации проверяли до закрытия конструкций, поверхности принимали перед финишной отделкой. Ход работ фиксировали в фотоотчётах.';
   return `<div class="project-page"><div class="case-intro">` + innerHero({title:project.name,section:'Проект',lead:description,image:project.img,
-    meta:project.city+' · '+project.type,illustration:project.illustration})
+    meta:project.city+' · '+project.type})
     + blk('Параметры проекта',`<div class="case-facts">${[
       ['Город',project.city],['Объект',project.type],['Направление',directions.map(dir=>`<a class="case-direction ${dir}" href="#${dir}">${DIRS[dir].brand}</a>`).join(' · ')],
       ['Площадь работ',area],['Срок работ',duration]

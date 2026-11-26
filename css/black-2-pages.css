@@ -334,6 +334,18 @@ html.anim .b2-inner [data-inner-card][data-reveal].is-in {transition-duration:1s
 .case-facts > div {display:grid;align-content:start;gap:12px;}
 .case-facts .lbl {font:var(--fs-label)/1.35 var(--gl);}
 .case-facts p {font:calc(20 * var(--u))/1.4 var(--nf);text-transform:uppercase;}
+@media (min-width:1024px) {
+  .case-intro {position:relative;display:block;height:100svh;min-height:calc(700 * var(--u));}
+  #app .case-intro > .blk {position:absolute;z-index:1;left:0;right:0;bottom:calc(115 * var(--u) - 50px);padding-block:0;}
+  #app .case-intro .case-facts {
+    --case-fact-row:calc(1.35 * var(--fs-label) + 12px + 28 * var(--u));
+    height:calc(2 * var(--case-fact-row) + 32px);
+    grid-template-rows:repeat(2,var(--case-fact-row));
+    align-items:start;
+  }
+  #app .case-intro .case-facts > div {grid-template-rows:calc(1.35 * var(--fs-label)) calc(28 * var(--u));min-width:0;}
+  #app .case-intro .case-facts :is(.lbl,p) {margin:0;white-space:nowrap;}
+}
 .case-direction {color:var(--c);text-decoration:underline;text-underline-offset:4px;}
 .case-direction:hover {color:var(--ink);}
 .case-story {display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--pad);}
