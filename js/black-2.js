@@ -8,7 +8,7 @@
   const pad2 = n => String(n).padStart(2, '0');
 
   const serviceGroups = D.SGROUPS.map(group => group.k === 'finish'
-    ? { ...group, img: 'assets/img/svc-finish-dark.png' }
+    ? { ...group, img: 'assets/img/svc-finish-dark.webp' }
     : group);
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const hasGsap = !!(window.gsap && window.ScrollTrigger);

@@ -191,7 +191,7 @@ const SECTION_PHOTOS = {
   'Социальные объекты':'assets/img/prj-school.jpg',
   'Промышленные объекты':'assets/img/svc-general.jpg',
   'Торговые центры':'assets/img/dir-business.jpg',
-  'Коммерческие помещения':'assets/img/about-engineering-dark.png',
+  'Коммерческие помещения':'assets/img/about-engineering-dark.webp',
   'Склады':'assets/img/draft-warehouse.jpg',
   'АЗС':'assets/img/draft-station.jpg',
   'Ремонт квартир':'assets/img/dir-home.jpg',
@@ -325,7 +325,7 @@ function directionServicesBlock() {
   const index=groups.findIndex(g=>g.k===svcTab), group=groups[index];
   const photo=window.CCTV.SGROUPS.find(g=>g.k===group.k);
   const telecomEngineering=svcDir==='telecom'&&group.k==='engineering';
-  const image=telecomEngineering?'assets/img/draft-network.jpg':group.k==='finish'?'assets/img/svc-finish-dark.png':photo.img;
+  const image=telecomEngineering?'assets/img/draft-network.jpg':group.k==='finish'?'assets/img/svc-finish-dark.webp':photo.img;
   if(telecomEngineering)group.desc='Монтируем слаботочные сети: СКС, видеонаблюдение, контроль доступа и связь.';
   return `<div class="grid b2-service-selector">
     <div class="c1-2 b2-service-index"><div class="b2-service-tabs" role="tablist" aria-label="Группы услуг">${groups.map(g=>`<button type="button" class="svc-tab" role="tab" id="direction-tab-${g.k}" aria-selected="${g.k===svcTab}" aria-controls="service-${g.k}" tabindex="${g.k===svcTab?0:-1}" data-svc-tab="${g.k}">${g.name}</button>`).join('')}</div><p class="b2-service-number" aria-hidden="true">${String(index+1).padStart(2,'0')} / ${String(groups.length).padStart(2,'0')}　${group.tag}</p></div>
@@ -502,7 +502,7 @@ function pgProject(slug){
 // Original photographs supplied by the user, stored locally with the About page assets.
 const ABOUT_ASSETS = {
   hero: 'assets/img/about-v2/hero.jpg',
-  partners: 'assets/img/about-v2/partners.png',
+  partners: 'assets/img/about-v2/partners.webp',
   portrait: 'assets/img/about-v2/director.png'
 };
 // Fictional team for the local mockup; replace with the client's staff before publishing.
@@ -525,7 +525,7 @@ function pgAbout(){
     <div class="grid about-body">
       <span class="about-accent" aria-hidden="true"></span>
       <figure class="about-img about-img--engineering">
-        <img src="assets/img/about-engineering-dark.png" alt="Современный общественный интерьер с бетонными колоннами и интегрированными инженерными системами" loading="eager">
+        <img src="assets/img/about-engineering-dark.webp" alt="Современный общественный интерьер с бетонными колоннами и интегрированными инженерными системами" loading="eager">
       </figure>
       <div class="about-text">
         <p class="lead" data-about-copy><span class="about-copy-line">CCTV Group 10 лет работает на жилых комплексах,</span> <span class="about-copy-line">школах, поликлиниках и коммерческих объектах.</span> <span class="about-copy-line">Ведём полный цикл: проектируем, считаем смету</span> <span class="about-copy-line">и выполняем работы от фасадов до чистовой отделки.</span></p>
@@ -590,7 +590,7 @@ function pgAbout(){
   </section>
   </div>`;
 }
-const pgDocuments = () => innerHero({title:'Документы',section:'Документы',image:'assets/img/about-engineering-dark.png',
+const pgDocuments = () => innerHero({title:'Документы',section:'Документы',image:'assets/img/about-engineering-dark.webp',
   lead:'Членство в СРО, страхование ответственности, допуски и сертификаты.'})+blk('Документы',docsList(),1);
 const DRAFT_LETTERS = [
   [
@@ -644,7 +644,7 @@ function reviewsSection() {
   return `<section class="testimonials-section direction-section" aria-label="Отзывы"><div class="grid testimonials-grid" data-inner-enter><div class="testimonials-side"><span class="label">/ Отзывы</span><div class="testimonials-bottom"><h2>Что говорят<br>о нас наши<br>клиенты</h2>${controls}</div></div><div class="review-carousel" aria-label="Отзывы клиентов"><div class="review-list" tabindex="0">${REVIEWS.map(([name,role,quote],index)=>`<div class="review-slide"><figure class="review" tabindex="0"><figcaption><span class="review-portrait portrait-${index}" aria-hidden="true"></span><span><b>${name}</b><small>${role}</small></span></figcaption><blockquote>${quote}</blockquote><div class="review-full" aria-hidden="true">${quote}</div></figure></div>`).join('')}</div></div></div></section>`;
 }
 
-const pgClients = () => innerHero({title:'Клиенты и отзывы',section:'Клиенты',image:'assets/img/about-engineering-dark.png',
+const pgClients = () => innerHero({title:'Клиенты и отзывы',section:'Клиенты',image:'assets/img/about-engineering-dark.webp',
   lead:'Компании, с которыми работаем.<br>Отзывы заказчиков и благодарственные письма.'})
   + blk('Логотипы клиентов',logos(),1)
   + reviewsSection()
@@ -662,7 +662,7 @@ function partnerWorkCards() {
     </article>`;
   }).join('');
 }
-const pgPartners = () => `<div class="partners-page">` + innerHero({title:'Партнёрам<br>и подрядчикам',section:'Партнёрам',image:'assets/img/about-v2/partners.png',
+const pgPartners = () => `<div class="partners-page">` + innerHero({title:'Партнёрам<br>и подрядчикам',section:'Партнёрам',image:'assets/img/about-v2/partners.webp',
   lead:'Ищем субподрядчиков на объекты Петербурга,<br>Московской области и регионов.'})
   + `<section class="direction-section partner-works" aria-labelledby="partner-works-title">
     <div class="grid"><div class="c1-2 partner-works-intro" data-inner-enter><h2 class="h2" id="partner-works-title">Кого ищем</h2><p>Приглашаем команды с опытом строительных,<br>инженерных и отделочных работ.</p></div></div>
@@ -1208,7 +1208,7 @@ function initReviews() {
   update();
 }
 
-function updateServiceImage(){const panel=document.querySelector('.svc-left');const group=window.CCTV.SGROUPS.find(g=>g.k===svcTab);if(panel&&group)panel.style.setProperty('--service-image',`url('${group.k==='finish'?'assets/img/svc-finish-dark.png':group.img}')`);}
+function updateServiceImage(){const panel=document.querySelector('.svc-left');const group=window.CCTV.SGROUPS.find(g=>g.k===svcTab);if(panel&&group)panel.style.setProperty('--service-image',`url('${group.k==='finish'?'assets/img/svc-finish-dark.webp':group.img}')`);}
 function placeContactLinks() {
   const grid = app.querySelector('.contact-grid');
   if (!grid) return;
